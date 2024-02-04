@@ -2,6 +2,7 @@ import setup_path
 import airsim
 import tempfile
 import os
+import random
 import numpy as np
 import cv2
 import pprint
@@ -11,7 +12,7 @@ client = airsim.MultirotorClient()
 client.confirmConnection()
 
 # add new vehicle
-vehicle_name = "Drone2"
+vehicle_name = "Drone2" + str(random.randrange(100))
 pose = airsim.Pose(airsim.Vector3r(0, 0, 0), airsim.to_quaternion(0, 0, 0))
 
 client.simAddVehicle(vehicle_name, "simpleflight", pose)
