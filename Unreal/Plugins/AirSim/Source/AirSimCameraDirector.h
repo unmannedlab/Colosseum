@@ -7,7 +7,7 @@
 #include "ManualPoseController.h"
 #include "common/common_utils/Utils.hpp"
 #include "GameFramework/SpringArmComponent.h"
-#include "CameraDirector.generated.h"
+#include "AirSimCameraDirector.generated.h"
 
 UENUM(BlueprintType)
 enum class ECameraDirectorMode : uint8
