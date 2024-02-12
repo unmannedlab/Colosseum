@@ -52,6 +52,8 @@ public:
     virtual bool setObjectMaterial(const std::string& object_name, const std::string& material_name, const int component_id = 0) override;
     virtual bool setObjectMaterialFromTexture(const std::string& object_name, const std::string& texture_path, const int component_id = 0) override;
     virtual std::vector<std::string> listSceneObjects(const std::string& name_regex) const override;
+    virtual std::vector<std::string> listSceneObjectsByTag(const std::string& tag_regex) const override;
+
     virtual Pose getObjectPose(const std::string& object_name) const override;
     virtual bool setObjectPose(const std::string& object_name, const Pose& pose, bool teleport) override;
     virtual bool runConsoleCommand(const std::string& command) override;

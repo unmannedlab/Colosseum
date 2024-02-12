@@ -364,6 +364,10 @@ namespace airlib
             return getWorldSimApi()->listSceneObjects(name_regex);
         });
 
+        pimpl_->server.bind("simListSceneObjectsByTag", [&](const std::string& tag_regex) -> std::vector<string> {
+            return getWorldSimApi()->listSceneObjectsByTag(tag_regex);
+        });
+
         pimpl_->server.bind("simLoadLevel", [&](const std::string& level_name) -> bool {
             return getWorldSimApi()->loadLevel(level_name);
         });

@@ -72,6 +72,8 @@ public:
     }
 
     static std::vector<std::string> ListMatchingActors(const UObject* context, const std::string& name_regex);
+    static std::vector<std::string> ListMatchingActorsByTag(const UObject* context, const std::string& tag_regex);
+
     UFUNCTION(BlueprintCallable, Category = "AirSim|LevelAPI")
     static bool loadLevel(UObject* context, const FString& level_name);
     UFUNCTION(BlueprintCallable, Category = "AirSim|LevelAPI")
