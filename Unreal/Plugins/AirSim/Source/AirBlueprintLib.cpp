@@ -828,3 +828,13 @@ bool UAirBlueprintLib::CompressUsingImageWrapper(const TArray<uint8>& uncompress
 
     return bSucceeded;
 }
+
+void UAirBlueprintLib::FindAllActorByTag(const UObject* context, FName tag, TArray<AActor*>& foundActors)
+{
+    UGameplayStatics::GetAllActorsWithTag(context, tag, foundActors);
+}
+
+FRotator UAirBlueprintLib::FindLookAtRotation(AActor* source, AActor* target)
+{
+    return UKismetMathLibrary::FindLookAtRotation(source->GetActorLocation(), target->GetActorLocation());
+}

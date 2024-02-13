@@ -1073,3 +1073,23 @@ std::vector<msr::airlib::DetectionInfo> WorldSimApi::getDetections(ImageCaptureB
 
     return result;
 }
+
+Vector3r WorldSimApi::findLookAtRotation(const std::string& vehicle_name, const std::string& object_name)
+{
+    Vector3r result = Vector3r::Zero();
+    PawnSimApi* pawn = simmode_->getVehicleSimApi(vehicle_name);
+
+    if (pawn) {
+        AActor* source = pawn->getPawn();
+        UAirBlueprintLib::RunCommandOnGameThread([this, object_name, &source, &result]() {
+            AActor* target = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
+            if (target) {
+                FRotator rot = UAirBlueprintLib::FindLookAtRotation(source, target);
+                result = Vector3r(rot.Pitch, rot.Roll, rot.Yaw);
+            }
+        },
+                                                 true);
+    }
+
+    return result;
+}

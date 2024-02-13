@@ -1137,6 +1137,9 @@ class VehicleClient:
         """
         self.client.call('simSetExtForce', ext_force)
 
+    def simFindLookAtRotation(self, object_name, vehicle_name = ''):
+        return self.client.call('simFindLookAtRotation', vehicle_name, object_name)
+
 # -----------------------------------  Multirotor APIs ---------------------------------------------
 class MultirotorClient(VehicleClient, object):
     def __init__(self, ip = "", port = 41451, timeout_value = 3600):

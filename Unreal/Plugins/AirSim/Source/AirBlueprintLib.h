@@ -71,6 +71,9 @@ public:
         UGameplayStatics::GetAllActorsOfClass(context, T::StaticClass(), foundActors);
     }
 
+    static void FindAllActorByTag(const UObject* context, FName tag, TArray<AActor*>& foundActors);
+    static FRotator FindLookAtRotation(AActor* source, AActor* target);
+
     static std::vector<std::string> ListMatchingActors(const UObject* context, const std::string& name_regex);
     static std::vector<std::string> ListMatchingActorsByTag(const UObject* context, const std::string& tag_regex);
 

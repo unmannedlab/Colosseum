@@ -516,6 +516,11 @@ namespace airlib
             return getWorldSimApi()->getSettingsString();
         });
 
+        pimpl_->server.bind("simFindLookAtRotation", [&](const std::string& vehicle_name, const std::string& object_name) -> RpcLibAdaptorsBase::Vector3r {
+            const auto& rot = getWorldSimApi()->findLookAtRotation(vehicle_name, object_name);
+            return RpcLibAdaptorsBase::Vector3r(rot);
+        });
+
         //if we don't suppress then server will bomb out for exceptions raised by any method
         pimpl_->server.suppress_exceptions(true);
     }

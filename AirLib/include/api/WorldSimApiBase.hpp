@@ -81,6 +81,7 @@ namespace airlib
         virtual vector<MeshPositionVertexBuffersResponse> getMeshPositionVertexBuffers() const = 0;
 
         virtual bool createVoxelGrid(const Vector3r& position, const int& x_size, const int& y_size, const int& z_size, const float& res, const std::string& output_file) = 0;
+        virtual Vector3r findLookAtRotation(const std::string& vehicle_name, const std::string& object_name) = 0;
 
         // Recording APIs
         virtual void startRecording() = 0;
