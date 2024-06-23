@@ -1,12 +1,12 @@
-# PX4 Setup for AirSim
+# PX4 Setup for Colosseum
 
 The [PX4 software stack](http://github.com/px4/firmware) is an open source very popular flight controller with support for wide variety of boards and sensors as well as built-in capability for higher level tasks such as mission planning. Please visit [px4.io](http://px4.io) for more information.
 
-**Warning**: While all releases of AirSim are always tested with PX4 to ensure the support, setting up PX4 is not a trivial task. Unless you have at least intermediate level of experience with PX4 stack, we recommend you use [simple_flight](simple_flight.md), which is now a default in AirSim.
+**Warning**: While all releases of Colosseum are always tested with PX4 to ensure the support, setting up PX4 is not a trivial task. Unless you have at least intermediate level of experience with PX4 stack, we recommend you use [simple_flight](simple_flight.md), which is now a default in Colosseum.
 
 ## Supported Hardware
 
-The following Pixhawk hardware has been tested with AirSim:
+The following Pixhawk hardware has been tested with Colosseum:
 
 1. [Pixhawk PX4 2.4.8](http://www.banggood.com/Pixhawk-PX4-2_4_8-Flight-Controller-32-Bit-ARM-PX4FMU-PX4IO-Combo-for-Multicopters-p-1040416.html)
 1. [PixFalcon](https://hobbyking.com/en_us/pixfalcon-micro-px4-autopilot.html?___store=en_us)
@@ -29,7 +29,7 @@ See also [initial firmware setup video](https://docs.px4.io/master/en/config/).
 5. In QGroundControl, go to Radio tab and calibrate (make sure the remote control is on and the receiver is showing the indicator for the binding).
 6. Go to the Flight Mode tab and chose one of the remote control switches as "Mode Channel". Then set (for example) Stabilized and Attitude flight modes for two positions of the switch.
 7. Go to the Tuning section of QGroundControl and set appropriate values. For example, for Fly Sky's FS-TH9X remote control, the following settings give a more realistic feel: Hover Throttle = mid+1 mark, Roll and pitch sensitivity = mid-3 mark, Altitude and position control sensitivity = mid-2 mark.
-8. In [AirSim settings](settings.md) file, specify PX4 for your vehicle config like this:
+8. In [Colosseum settings](settings.md) file, specify PX4 for your vehicle config like this:
 ```
     {
         "SettingsVersion": 1.2,
@@ -61,14 +61,14 @@ See also [initial firmware setup video](https://docs.px4.io/master/en/config/).
 
 Notice the PX4 `[simulator]` is using TCP, which is why we need to add: `"UseTcp": true,`. Notice we
 are also enabling `LockStep`, see [PX4 LockStep](px4_lockstep.md) for more information. The
-`Barometer` setting keeps PX4 happy because the default AirSim barometer has a bit too much noise
+`Barometer` setting keeps PX4 happy because the default Colosseum barometer has a bit too much noise
 generation.  This setting clamps that down a bit which allows PX4 to achieve GPS lock more quickly.
 
-After above setup you should be able to use a remote control (RC) to fly with AirSim. You can usually arm the vehicle by lowering and bringing two sticks of RC together down and in-wards. You don't need QGroundControl after the initial setup. Typically the Stabilized (instead of Manual) mode gives better experience for beginners.  See [PX4 Basic Flying Guide](https://docs.px4.io/master/en/flying/basic_flying.html).
+After above setup you should be able to use a remote control (RC) to fly with Colosseum. You can usually arm the vehicle by lowering and bringing two sticks of RC together down and in-wards. You don't need QGroundControl after the initial setup. Typically the Stabilized (instead of Manual) mode gives better experience for beginners.  See [PX4 Basic Flying Guide](https://docs.px4.io/master/en/flying/basic_flying.html).
 
 You can also control the drone from [Python APIs](apis.md).
 
-See [Walkthrough Demo Video](https://youtu.be/HNWdYrtw3f0) and  [Unreal AirSim Setup  Video](https://youtu.be/1oY8Qu5maQQ) that shows you all the setup steps in this document.
+See [Walkthrough Demo Video](https://youtu.be/HNWdYrtw3f0) and  [Unreal Colosseum Setup  Video](https://youtu.be/1oY8Qu5maQQ) that shows you all the setup steps in this document.
 
 ## Setting up PX4 Software-in-Loop
 The PX4 SITL mode doesn't require you to have separate device such as a Pixhawk or Pixracer. This is in fact the recommended way to use PX4 with simulators by PX4 team. However, this is indeed harder to set up. Please see [this dedicated page](px4_sitl.md) for setting up PX4 in SITL mode.
@@ -126,4 +126,4 @@ param set COM_OBL_ACT 1
 ```
 
 #### I get message length mismatches errors
-You might need to set MAV_PROTO_VER parameter in QGC to "Always use version 1". Please see [this issue](https://github.com/Microsoft/AirSim/issues/546) more details.
+You might need to set MAV_PROTO_VER parameter in QGC to "Always use version 1". Please see [this issue](https://github.com/CodexLabsLLC/Colosseum/issues/546) more details.

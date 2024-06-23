@@ -1,5 +1,5 @@
-# AirSim on Docker in Linux
-We've two options for docker. You can either build an image for running [airsim linux binaries](#binaries), or for compiling Unreal Engine + AirSim [from source](#source)
+# Colosseum on Docker in Linux
+We've two options for docker. You can either build an image for running [airsim linux binaries](#binaries), or for compiling Unreal Engine + Colosseum [from source](#source)
 
 ## Binaries
 #### Requirements:
@@ -23,7 +23,7 @@ $ python build_airsim_image.py \
  `$ docker images | grep airsim`
 
 #### Running an unreal binary inside a docker container
-- Get [a Linux binary](https://github.com/Microsoft/AirSim/releases) or package your own project in Ubuntu.
+- Get [a Linux binary](https://github.com/CodexLabsLLC/Colosseum/releases) or package your own project in Ubuntu.
 Let's take the Blocks binary as an example.
 You can download it by running
 
@@ -81,8 +81,8 @@ $ ./run_airsim_image_binary.sh Blocks/Blocks.sh -- headless
         - [`docker image prune`](https://docs.docker.com/engine/reference/commandline/image_prune/)
         - [`docker system prune`](https://docs.docker.com/engine/reference/commandline/system_prune/)
 
-#### Building AirSim inside UE4 docker container:
-* Build AirSim docker image (which lays over the unreal image we just built)
+#### Building Colosseum inside UE4 docker container:
+* Build Colosseum docker image (which lays over the unreal image we just built)
   Below are the default arguments.
     - `--base_image`: This is image over which we'll install airsim. We've tested on `adamrehn/ue4-engine:4.19.2-cudagl10.0`. See [ue4-docker](https://docs.adamrehn.com/ue4-docker/building-images/available-container-images) for other versions.
     - `--target_image` is the desired name of your docker image.
@@ -96,7 +96,7 @@ $ python build_airsim_image.py \
    --target_image=airsim_source:4.19.2-cudagl10.0
 ```
 
-#### Running AirSim container
+#### Running Colosseum container
 * Run the airsim source image we built by:
 
 ```bash
@@ -106,11 +106,11 @@ $ python build_airsim_image.py \
    Syntax is `./run_airsim_image_source.sh DOCKER_IMAGE_NAME -- headless`
    `-- headless`: suffix this to run in optional headless mode.
 
-* Inside the container, you can see `UnrealEngine` and `AirSim` under `/home/ue4`.
+* Inside the container, you can see `UnrealEngine` and `Colosseum` under `/home/ue4`.
 * Start unreal engine inside the container:
    `ue4@HOSTMACHINE:~$ /home/ue4/UnrealEngine/Engine/Binaries/Linux/UE4Editor`
 * [Specifying an airsim settings.json](#specifying-settingsjson)
-* Continue with [AirSim's Linux docs](build_linux.md#build-unreal-environment).
+* Continue with [Colosseum's Linux docs](build_linux.md#build-unreal-environment).
 
 #### [Misc] Packaging Unreal Environments in `airsim_source` containers
 * Let's take the Blocks environment as an example.
@@ -119,7 +119,7 @@ $ python build_airsim_image.py \
 ```bash
 $ /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun -platform=Linux -clientconfig=Shipping -serverconfig=Shipping -noP4 -cook -allmaps -build -stage -prereqs -pak -archive \
 -archivedirectory=/home/ue4/Binaries/Blocks/ \
--project=/home/ue4/AirSim/Unreal/Environments/Blocks/Blocks.uproject
+-project=/home/ue4/Colosseum/Unreal/Environments/Blocks/Blocks.uproject
 ```
 
 This would create a Blocks binary in `/home/ue4/Binaries/Blocks/`.
@@ -127,12 +127,12 @@ You can test it by running `/home/ue4/Binaries/Blocks/LinuxNoEditor/Blocks.sh -w
 
 ### Specifying settings.json
 #### `airsim_binary` docker image:
-  - We're mapping the host machine's `PATH/TO/Airsim/docker/settings.json` to the docker container's `/home/airsim_user/Documents/AirSim/settings.json`.
-  - Hence, we can load any settings file by simply modifying `PATH_TO_YOUR/settings.json` by modifying the following snippets in [`run_airsim_image_binary.sh`](https://github.com/Microsoft/AirSim/blob/main/docker/run_airsim_image_binary.sh)
+  - We're mapping the host machine's `PATH/TO/Airsim/docker/settings.json` to the docker container's `/home/airsim_user/Documents/Colosseum/settings.json`.
+  - Hence, we can load any settings file by simply modifying `PATH_TO_YOUR/settings.json` by modifying the following snippets in [`run_airsim_image_binary.sh`](https://github.com/CodexLabsLLC/Colosseum/blob/main/docker/run_airsim_image_binary.sh)
 
 ```bash
 nvidia-docker run --runtime=nvidia -it \
-      -v $PATH_TO_YOUR/settings.json:/home/airsim_user/Documents/AirSim/settings.json \
+      -v $PATH_TO_YOUR/settings.json:/home/airsim_user/Documents/Colosseum/settings.json \
       -v $UNREAL_BINARY_PATH:$UNREAL_BINARY_PATH \
       -e SDL_VIDEODRIVER=$SDL_VIDEODRIVER_VALUE \
       -e SDL_HINT_CUDA_DEVICE='0' \
@@ -156,12 +156,12 @@ docker run --gpus all -it \
 
 ####  `airsim_source` docker image:
 
-  * We're mapping the host machine's `PATH/TO/Airsim/docker/settings.json` to the docker container's `/home/airsim_user/Documents/AirSim/settings.json`.
-  * Hence, we can load any settings file by simply modifying `PATH_TO_YOUR/settings.json` by modifying the following snippets in [`run_airsim_image_source.sh`](https://github.com/Microsoft/AirSim/blob/main/docker/run_airsim_image_source.sh):
+  * We're mapping the host machine's `PATH/TO/Airsim/docker/settings.json` to the docker container's `/home/airsim_user/Documents/Colosseum/settings.json`.
+  * Hence, we can load any settings file by simply modifying `PATH_TO_YOUR/settings.json` by modifying the following snippets in [`run_airsim_image_source.sh`](https://github.com/CodexLabsLLC/Colosseum/blob/main/docker/run_airsim_image_source.sh):
 
 ```bash
    nvidia-docker run --runtime=nvidia -it \
-      -v $(pwd)/settings.json:/home/airsim_user/Documents/AirSim/settings.json \
+      -v $(pwd)/settings.json:/home/airsim_user/Documents/Colosseum/settings.json \
       -e SDL_VIDEODRIVER=$SDL_VIDEODRIVER_VALUE \
       -e SDL_HINT_CUDA_DEVICE='0' \
       --net=host \

@@ -1,5 +1,5 @@
-# Adding AirSim to Custom Unity Projects
-Before completing these steps, make sure you have properly [set up AirSim for Unity](Unity.md)
+# Adding Colosseum to Custom Unity Projects
+Before completing these steps, make sure you have properly [set up Colosseum for Unity](Unity.md)
 1. Open the Containing folder of your custom unity project
 2. Copy and paste the following items from Unity demo into the main project folder of your custom environment:
 ```
@@ -15,8 +15,8 @@ ProjectSettings
 ```
 Main Camera
 Directional Light
-AirSimHUD
-AirSimGlobal
+ColosseumHUD
+ColosseumGlobal
 Car
 ```
 7. After removing `CarDemo` from the Hierarchy panel, save your modified scene as `CarDemo`.
@@ -25,4 +25,4 @@ Car
 
 To run your project drag `SimModeSelector` into, and remove everything else from the Scene Hierarchy panel.
 
-Your custom environment is now ready to interface with AirSim!
+Your custom environment is now ready to interface with Colosseum!

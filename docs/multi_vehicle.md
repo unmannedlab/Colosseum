@@ -1,6 +1,6 @@
-# Multiple Vehicles in AirSim
+# Multiple Vehicles in Colosseum
 
-Since release 1.2, AirSim is fully enabled for multiple vehicles. This capability allows you to create multiple vehicles easily and use APIs to control them.
+Since release 1.2, Colosseum is fully enabled for multiple vehicles. This capability allows you to create multiple vehicles easily and use APIs to control them.
 
 ## Creating Multiple Vehicles
 
@@ -51,11 +51,11 @@ It's as easy as specifying them in [settings.json](settings.md). The `Vehicles` 
 
 ## Using APIs for Multiple Vehicles
 
-The new APIs since AirSim 1.2 allows you to specify `vehicle_name`. This name corresponds to keys in json settings (for example, Car1 or Drone2 above).
+The new APIs since Colosseum 1.2 allows you to specify `vehicle_name`. This name corresponds to keys in json settings (for example, Car1 or Drone2 above).
 
-[Example code for cars](https://github.com/microsoft/AirSim/blob/main/PythonClient/car/multi_agent_car.py)
+[Example code for cars](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/car/multi_agent_car.py)
 
-[Example code for multirotors](https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/multi_agent_drone.py)
+[Example code for multirotors](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/multi_agent_drone.py)
 
 Using APIs for multi-vehicles requires specifying the `vehicle_name`, which needs to be hardcoded in the script or requires parsing of the settings file. There's also a simple API `listVehicles()` which returns a list (vector in C++) of strings containing names of the current vehicles. For example, with the above settings for 2 Cars -
 
@@ -66,11 +66,11 @@ Using APIs for multi-vehicles requires specifying the `vehicle_name`, which need
 
 ### Demo
 
-[![AirSimMultiple Vehicles Demo Video](images/demo_multi_vehicles.png)](https://youtu.be/35dgcuLuF5M)
+[![ColosseumMultiple Vehicles Demo Video](images/demo_multi_vehicles.png)](https://youtu.be/35dgcuLuF5M)
 
 ### Creating vehicles at runtime through API
 
-In the latest main branch of AirSim, the `simAddVehicle` API can be used to create vehicles at runtime. This is useful to create many such vehicles without needing to specify them in the settings. There are some limitations of this currently, described below -
+In the latest main branch of Colosseum, the `simAddVehicle` API can be used to create vehicles at runtime. This is useful to create many such vehicles without needing to specify them in the settings. There are some limitations of this currently, described below -
 
 `simAddVehicle` takes in the following arguments:
 
@@ -84,10 +84,10 @@ Returns: `bool` Whether vehicle was created
 
 The usual APIs can be used to control and interact with the vehicle once created, with the `vehicle_name` parameter. Specifying other settings such as additional cameras, etc. isn't possible currently, a future enhancement could be passing JSON string of settings for the vehicle. It also works with the `listVehicles()` API described above, so the vehicles spawned would be included in the list.
 
-For some examples, check out [HelloSpawnedDrones.cpp](https://github.com/microsoft/AirSim/blob/main/HelloSpawnedDrones/HelloSpawnedDrones.cpp) -
+For some examples, check out [HelloSpawnedDrones.cpp](https://github.com/CodexLabsLLC/Colosseum/blob/main/HelloSpawnedDrones/HelloSpawnedDrones.cpp) -
 
 ![HelloSpawnedDrones](images/HelloSpawnedDrones.gif)
 
-And [runtime_car.py](https://github.com/microsoft/AirSim/tree/main/PythonClient/car/runtime_car.py) -
+And [runtime_car.py](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient/car/runtime_car.py) -
 
 ![runtime_car](images/simAddVehicle_Car.gif)

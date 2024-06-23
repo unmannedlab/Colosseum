@@ -14,8 +14,8 @@ In "software-in-loop" simulation (SITL or SIL) mode the firmware runs in your co
 
 ## What Flight Controllers are Supported?
 
-AirSim has built-in flight controller called [simple_flight](simple_flight.md) and it is used by default. You don't need to do anything to use or configure it. AirSim also supports [PX4](px4_setup.md) & [ArduPilot](https://ardupilot.org/dev/docs/sitl-with-airsim.html) as external flight controllers for advanced users.
+Colosseum has built-in flight controller called [simple_flight](simple_flight.md) and it is used by default. You don't need to do anything to use or configure it. Colosseum also supports [PX4](px4_setup.md) & [ArduPilot](https://ardupilot.org/dev/docs/sitl-with-airsim.html) as external flight controllers for advanced users.
 
-## Using AirSim Without Flight Controller
+## Using Colosseum Without Flight Controller
 
-Yes, now it's possible to use AirSim without flight controller. Please see the [instructions here](image_apis.md) for how to use so-called "Computer Vision" mode. If you don't need vehicle dynamics, we highly recommend using this mode.
+Yes, now it's possible to use Colosseum without flight controller. Please see the [instructions here](image_apis.md) for how to use so-called "Computer Vision" mode. If you don't need vehicle dynamics, we highly recommend using this mode.

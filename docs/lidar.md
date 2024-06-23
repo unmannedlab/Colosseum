@@ -1,8 +1,8 @@
-# How to Use Lidar in AirSim
+# How to Use Lidar in Colosseum
 
-AirSim supports Lidar for multirotors and cars.
+Colosseum supports Lidar for multirotors and cars.
 
-The enablement of lidar and the other lidar settings can be configured via AirSimSettings json.
+The enablement of lidar and the other lidar settings can be configured via ColosseumSettings json.
 Please see [general sensors](sensors.md) for information on configruation of general/shared sensor settings.
 
 ## Enabling lidar on a vehicle
@@ -39,7 +39,7 @@ e.g.
 
 ```json
 {
-    "SeeDocsAt": "https://microsoft.github.io/AirSim/settings/",
+    "SeeDocsAt": "https://CodexLabsLLC.github.io/Colosseum/settings/",
     "SettingsVersion": 1.2,
 
     "SimMode": "Multirotor",
@@ -112,10 +112,10 @@ Use `getLidarData()` API to retrieve the Lidar data.
 * Segmentation: The segmentation of each lidar point's collided object
 
 ### Python Examples
-- [drone_lidar.py](https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/drone_lidar.py)
-- [car_lidar.py](https://github.com/microsoft/AirSim/blob/main/PythonClient/car/car_lidar.py)
-- [sensorframe_lidar_pointcloud.py](https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/sensorframe_lidar_pointcloud.py)
-- [vehicleframe_lidar_pointcloud.py](https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/vehicleframe_lidar_pointcloud.py)
+- [drone_lidar.py](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/drone_lidar.py)
+- [car_lidar.py](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/car/car_lidar.py)
+- [sensorframe_lidar_pointcloud.py](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/sensorframe_lidar_pointcloud.py)
+- [vehicleframe_lidar_pointcloud.py](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/vehicleframe_lidar_pointcloud.py)
 
 ## Coming soon
 * Visualization of lidar data on client side.

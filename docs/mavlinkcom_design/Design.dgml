@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DirectedGraph ZoomLevel="1" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+<DirectedGraph ZoomLevel="1" xmlns="http://schemas.CodexLabsLLC.com/vs/2009/dgml">
   <Nodes>
     <Node Id="&quot;drone&quot;" Bounds="-598.230019146979,172.687628484788,50,25.96" Label="PX4" UseManualLocation="True" />
     <Node Id="142835b6-4394-48ae-9ddf-ab8d3a86a8801" Category="Comment" Bounds="251.724877624512,-4.49602149098726,246.44,137.68" Label="Example 2: simulation can talk to jMavSim and jMavSim connects to PX4.  jMavSim can also manage multiple connections, so it can talk to unreal simulator. Another MavLinkConnection can be joined to proxy connections that jMavSim doesn't support, like the LogViewer or a remote camera node." UseManualLocation="True" />

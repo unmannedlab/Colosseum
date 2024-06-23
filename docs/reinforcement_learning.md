@@ -1,6 +1,6 @@
-# Reinforcement Learning in AirSim
+# Reinforcement Learning in Colosseum
 
-We below describe how we can implement DQN in AirSim using an OpenAI gym wrapper around AirSim API, and using stable baselines implementations of standard RL algorithms. We recommend installing stable-baselines3 in order to run these examples (please see https://github.com/DLR-RM/stable-baselines3)
+We below describe how we can implement DQN in Colosseum using an OpenAI gym wrapper around Colosseum API, and using stable baselines implementations of standard RL algorithms. We recommend installing stable-baselines3 in order to run these examples (please see https://github.com/DLR-RM/stable-baselines3)
 
 #### Disclaimer
 
@@ -8,18 +8,18 @@ This is still in active development. What we share below is a framework that can
 
 #### Gym wrapper
 
-In order to use AirSim as a gym environment, we extend and reimplement the base methods such as `step`, `_get_obs`, `_compute_reward` and `reset` specific to AirSim and the task of interest. The sample environments used in these examples for car and drone can be seen in `PythonClient/reinforcement_learning/*_env.py`
+In order to use Colosseum as a gym environment, we extend and reimplement the base methods such as `step`, `_get_obs`, `_compute_reward` and `reset` specific to Colosseum and the task of interest. The sample environments used in these examples for car and drone can be seen in `PythonClient/reinforcement_learning/*_env.py`
 
 ## RL with Car
 
-[Source code](https://github.com/Microsoft/AirSim/tree/main/PythonClient/reinforcement_learning)
+[Source code](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient/reinforcement_learning)
 
-This example works with AirSimNeighborhood environment available in [releases](https://github.com/Microsoft/AirSim/releases).
+This example works with ColosseumNeighborhood environment available in [releases](https://github.com/CodexLabsLLC/Colosseum/releases).
 
 First, we need to get the images from simulation and transform them appropriately. Below, we show how a depth image can be obtained from the ego camera and transformed to an 84X84 input to the network. (you can use other sensor modalities, and sensor inputs as well – of course you’ll have to modify the code accordingly).
 
 ```
-responses = client.simGetImages([ImageRequest(0, AirSimImageType.DepthPerspective, True, False)])
+responses = client.simGetImages([ImageRequest(0, ColosseumImageType.DepthPerspective, True, False)])
 current_state = transform_input(responses)
 ```
 
@@ -127,9 +127,9 @@ Note that the simulation needs to be up and running before you execute `dqn_car.
 
 ## RL with Quadrotor
 
-[Source code](https://github.com/Microsoft/AirSim/tree/main/PythonClient/reinforcement_learning)
+[Source code](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient/reinforcement_learning)
 
-This example works with AirSimMountainLandscape environment available in [releases](https://github.com/Microsoft/AirSim/releases).
+This example works with ColosseumMountainLandscape environment available in [releases](https://github.com/CodexLabsLLC/Colosseum/releases).
 
 We can similarly apply RL for various autonomous flight scenarios with quadrotors. Below is an example on how RL could be used to train quadrotors to follow high tension power lines (e.g. application for energy infrastructure inspection).
 There are seven discrete actions here that correspond to different directions in which the quadrotor can move in (six directions + one hovering action).

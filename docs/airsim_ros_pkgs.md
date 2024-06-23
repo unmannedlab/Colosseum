@@ -1,10 +1,10 @@
 # airsim_ros_pkgs
 
-A ROS wrapper over the AirSim C++ client library.
+A ROS wrapper over the Colosseum C++ client library.
 
 ## Setup
 
-The below steps are meant for Linux. If you're running AirSim on Windows, you can use Windows Subsystem for Linux (WSL) to run the ROS wrapper, see the instructions [below](#setting-up-the-build-environment-on-windows10-using-wsl1-or-wsl2). If you're unable or don't prefer to install ROS and related tools on your host Linux due to some issues, you can also try it using Docker, see the steps in [Using Docker for ROS wrapper](#using-docker-for-ros)
+The below steps are meant for Linux. If you're running Colosseum on Windows, you can use Windows Subsystem for Linux (WSL) to run the ROS wrapper, see the instructions [below](#setting-up-the-build-environment-on-windows10-using-wsl1-or-wsl2). If you're unable or don't prefer to install ROS and related tools on your host Linux due to some issues, you can also try it using Docker, see the steps in [Using Docker for ROS wrapper](#using-docker-for-ros)
 
 - If your default GCC version is not 8 or above (check using `gcc --version`)
 
@@ -28,11 +28,11 @@ The below steps are meant for Linux. If you're running AirSim on Windows, you ca
 
 ## Build
 
-- Build AirSim
+- Build Colosseum
 
 ```shell
-git clone https://github.com/Microsoft/AirSim.git;
-cd AirSim;
+git clone https://github.com/CodexLabsLLC/Colosseum.git;
+cd Colosseum;
 ./setup.sh;
 ./build.sh;
 ```
@@ -67,17 +67,17 @@ roslaunch airsim_ros_pkgs rviz.launch;
 
    **Note**: If you get an error running `roslaunch airsim_ros_pkgs airsim_node.launch`, run `catkin clean` and try again
 
-## Using AirSim ROS wrapper
+## Using Colosseum ROS wrapper
 
-The ROS wrapper is composed of two ROS nodes - the first is a wrapper over AirSim's multirotor C++ client library, and the second is a simple PD position controller.
+The ROS wrapper is composed of two ROS nodes - the first is a wrapper over Colosseum's multirotor C++ client library, and the second is a simple PD position controller.
 Let's look at the ROS API for both nodes:
 
-### AirSim ROS Wrapper Node
+### Colosseum ROS Wrapper Node
 
 #### Publishers:
 
-- `/airsim_node/origin_geo_point` [airsim_ros_pkgs/GPSYaw](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg)
-GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://microsoft.github.io/AirSim/settings/) file under the `OriginGeopoint` key.
+- `/airsim_node/origin_geo_point` [airsim_ros_pkgs/GPSYaw](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg)
+GPS coordinates corresponding to global NED frame. This is set in the airsim's [settings.json](https://CodexLabsLLC.github.io/Colosseum/settings/) file under the `OriginGeopoint` key.
 
 - `/airsim_node/VEHICLE_NAME/global_gps` [sensor_msgs/NavSatFix](https://docs.ros.org/api/sensor_msgs/html/msg/NavSatFix.html)
 This the current GPS coordinates of the drone in airsim.
@@ -92,7 +92,7 @@ Odometry in NED frame (default name: odom_local_ned, launch name and frame type 
 
 - `/tf` [tf2_msgs/TFMessage](https://docs.ros.org/api/tf2_msgs/html/msg/TFMessage.html)
 
-- `/airsim_node/VEHICLE_NAME/altimeter/SENSOR_NAME` [airsim_ros_pkgs/Altimeter](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/msg/Altimeter.msg)
+- `/airsim_node/VEHICLE_NAME/altimeter/SENSOR_NAME` [airsim_ros_pkgs/Altimeter](https://github.com/CodexLabsLLC/Colosseum/blob/main/ros/src/airsim_ros_pkgs/msg/Altimeter.msg)
 This the current altimeter reading for altitude, pressure, and [QNH](https://en.wikipedia.org/wiki/QNH)
 
 - `/airsim_node/VEHICLE_NAME/imu/SENSOR_NAME` [sensor_msgs::Imu](http://docs.ros.org/api/sensor_msgs/html/msg/Imu.html)
@@ -109,20 +109,20 @@ IMU sensor data
 
 #### Subscribers:
 
-- `/airsim_node/vel_cmd_body_frame` [airsim_ros_pkgs/VelCmd](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
+- `/airsim_node/vel_cmd_body_frame` [airsim_ros_pkgs/VelCmd](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
   Ignore `vehicle_name` field, leave it to blank. We will use `vehicle_name` in future for multiple drones.
 
-- `/airsim_node/vel_cmd_world_frame` [airsim_ros_pkgs/VelCmd](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
+- `/airsim_node/vel_cmd_world_frame` [airsim_ros_pkgs/VelCmd](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
   Ignore `vehicle_name` field, leave it to blank. We will use `vehicle_name` in future for multiple drones.
 
-- `/gimbal_angle_euler_cmd` [airsim_ros_pkgs/GimbalAngleEulerCmd](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleEulerCmd.msg)
+- `/gimbal_angle_euler_cmd` [airsim_ros_pkgs/GimbalAngleEulerCmd](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleEulerCmd.msg)
   Gimbal set point in euler angles.
 
-- `/gimbal_angle_quat_cmd` [airsim_ros_pkgs/GimbalAngleQuatCmd](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleQuatCmd.msg)
+- `/gimbal_angle_quat_cmd` [airsim_ros_pkgs/GimbalAngleQuatCmd](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/GimbalAngleQuatCmd.msg)
   Gimbal set point in quaternion.
 
-- `/airsim_node/VEHICLE_NAME/car_cmd` [airsim_ros_pkgs/CarControls](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/msg/CarControls.msg)
-Throttle, brake, steering and gear selections for control. Both automatic and manual transmission control possible, see the [`car_joy.py`](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/scripts/car_joy) script for use.
+- `/airsim_node/VEHICLE_NAME/car_cmd` [airsim_ros_pkgs/CarControls](https://github.com/CodexLabsLLC/Colosseum/blob/main/ros/src/airsim_ros_pkgs/msg/CarControls.msg)
+Throttle, brake, steering and gear selections for control. Both automatic and manual transmission control possible, see the [`car_joy.py`](https://github.com/CodexLabsLLC/Colosseum/blob/main/ros/src/airsim_ros_pkgs/scripts/car_joy) script for use.
 
 #### Services:
 
@@ -197,16 +197,16 @@ Throttle, brake, steering and gear selections for control. Both automatic and ma
 
 #### Services:
 
-- `/airsim_node/VEHICLE_NAME/gps_goal` [Request: [srv/SetGPSPosition](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/srv/SetGPSPosition.srv)]
+- `/airsim_node/VEHICLE_NAME/gps_goal` [Request: [srv/SetGPSPosition](https://github.com/CodexLabsLLC/Colosseum/blob/main/ros/src/airsim_ros_pkgs/srv/SetGPSPosition.srv)]
   Target gps position + yaw.
   In **absolute** altitude.
 
-- `/airsim_node/VEHICLE_NAME/local_position_goal` [Request: [srv/SetLocalPosition](https://github.com/microsoft/AirSim/blob/main/ros/src/airsim_ros_pkgs/srv/SetLocalPosition.srv)]
+- `/airsim_node/VEHICLE_NAME/local_position_goal` [Request: [srv/SetLocalPosition](https://github.com/CodexLabsLLC/Colosseum/blob/main/ros/src/airsim_ros_pkgs/srv/SetLocalPosition.srv)]
   Target local position + yaw in global NED frame.
 
 #### Subscribers:
 
-- `/airsim_node/origin_geo_point` [airsim_ros_pkgs/GPSYaw](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg)
+- `/airsim_node/origin_geo_point` [airsim_ros_pkgs/GPSYaw](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/GPSYaw.msg)
   Listens to home geo coordinates published by `airsim_node`.
 
 - `/airsim_node/VEHICLE_NAME/odom_local_ned` [nav_msgs/Odometry](https://docs.ros.org/api/nav_msgs/html/msg/Odometry.html)
@@ -214,7 +214,7 @@ Throttle, brake, steering and gear selections for control. Both automatic and ma
 
 #### Publishers:
 
-- `/vel_cmd_world_frame` [airsim_ros_pkgs/VelCmd](https://github.com/microsoft/AirSim/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
+- `/vel_cmd_world_frame` [airsim_ros_pkgs/VelCmd](https://github.com/CodexLabsLLC/Colosseum/tree/main/ros/src/airsim_ros_pkgs/msg/VelCmd.msg)
   Sends velocity command to `airsim_node`
 
 #### Global params
@@ -248,7 +248,7 @@ Once installed, you can switch between WSL1 or WSL2 versions as you prefer.
 
 ##### WSL Setup steps
 
-1. Follow the instructions [here](https://docs.microsoft.com/en-us/windows/wsl/install-win10). Check that the ROS version you want to use is supported by the Ubuntu version you want to install.
+1. Follow the instructions [here](https://docs.CodexLabsLLC.com/en-us/windows/wsl/install-win10). Check that the ROS version you want to use is supported by the Ubuntu version you want to install.
 
 2. Congratulations, you now have a working Ubuntu subsystem under Windows, you can now go to [Ubuntu 16 / 18 instructions](#setup) and then [How to run Airsim on Windows and ROS wrapper on WSL](#how-to-run-airsim-on-windows-and-ros-wrapper-on-wsl)!
 
@@ -298,17 +298,17 @@ roslaunch airsim_ros_pkgs rviz.launch
 
 ### Using Docker for ROS
 
-A Dockerfile is present in the [`tools`](https://github.com/microsoft/AirSim/tree/main/tools/Dockerfile-ROS) directory. To build the `airsim-ros` image -
+A Dockerfile is present in the [`tools`](https://github.com/CodexLabsLLC/Colosseum/tree/main/tools/Dockerfile-ROS) directory. To build the `airsim-ros` image -
 
 ```shell
 cd tools
 docker build -t airsim-ros -f Dockerfile-ROS .
 ```
 
-To run, replace the path of the AirSim folder below -
+To run, replace the path of the Colosseum folder below -
 
 ```shell
-docker run --rm -it --net=host -v <your-AirSim-folder-path>:/home/testuser/AirSim airsim-ros:latest bash
+docker run --rm -it --net=host -v <your-Colosseum-folder-path>:/home/testuser/Colosseum airsim-ros:latest bash
 ```
 
-The above command mounts the AirSim directory to the home directory inside the container. Any changes you make in the source files from your host will be visible inside the container, which is useful for development and testing. Now follow the steps from [Build](#build) to compile and run the ROS wrapper.
+The above command mounts the Colosseum directory to the home directory inside the container. Any changes you make in the source files from your host will be visible inside the container, which is useful for development and testing. Now follow the steps from [Build](#build) to compile and run the ROS wrapper.

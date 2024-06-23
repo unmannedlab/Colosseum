@@ -1,10 +1,10 @@
 # An Orbit Trajectory
 
-Moved here from [https://github.com/microsoft/AirSim/wiki/An-Orbit-Trajectory](https://github.com/microsoft/AirSim/wiki/An-Orbit-Trajectory)
+Moved here from [https://github.com/CodexLabsLLC/Colosseum/wiki/An-Orbit-Trajectory](https://github.com/CodexLabsLLC/Colosseum/wiki/An-Orbit-Trajectory)
 
 Have you ever wanted to fly a nice smooth circular orbit? This can be handy for capturing 3D objects from all sides especially if you get multiple orbits at different altitudes.
 
-So the `PythonClient/multirotor` folder contains a script named [Orbit](https://github.com/microsoft/AirSim/blob/main/PythonClient/multirotor/orbit.py) that will do precisely that.
+So the `PythonClient/multirotor` folder contains a script named [Orbit](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/orbit.py) that will do precisely that.
 
 See [demo video](https://youtu.be/RFG5CTQi3Us)
 
@@ -18,4 +18,4 @@ This flies a 10 meter radius orbit around the center location at (startpos + rad
 
 ![image](images/orbit.png)
 
-The core of the algorithm is not that complicated.  At each point on the circle, we look ahead by a small delta in degrees, called the `lookahead_angle`, where that angle is computed based on our desired velocity.  We then find that lookahead point on the circle using sin/cosine and make that our "target point". Calculating the velocity then is easy, just subtract our current position from that point and feed that into the AirSim method `moveByVelocityZ`.
+The core of the algorithm is not that complicated.  At each point on the circle, we look ahead by a small delta in degrees, called the `lookahead_angle`, where that angle is computed based on our desired velocity.  We then find that lookahead point on the circle using sin/cosine and make that our "target point". Calculating the velocity then is easy, just subtract our current position from that point and feed that into the Colosseum method `moveByVelocityZ`.

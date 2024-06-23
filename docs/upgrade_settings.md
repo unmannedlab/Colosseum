@@ -1,6 +1,6 @@
 # Upgrading Settings
 
-The settings schema in AirSim 1.2 is changed for more flexibility and cleaner interface. If you have older [settings.json](settings.md) file then you can either delete it and restart AirSim or use this guide to make manual upgrade.
+The settings schema in Colosseum 1.2 is changed for more flexibility and cleaner interface. If you have older [settings.json](settings.md) file then you can either delete it and restart Colosseum or use this guide to make manual upgrade.
 
 ## Quicker Way
 We recommend simply deleting the [settings.json](settings.md) and add back the settings you need.

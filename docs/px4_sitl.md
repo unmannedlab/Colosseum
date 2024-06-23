@@ -3,7 +3,7 @@
 The [PX4](http://dev.px4.io) software provides a "software-in-loop" simulation (SITL) version of
 their stack that runs in Linux. If you are on Windows then you can use the [Cygwin
 Toolchain](https://dev.px4.io/master/en/setup/dev_env_windows_cygwin.html) or you can use the
-[Windows subsystem for Linux](https://docs.microsoft.com/en-us/windows/wsl/install-win10) and follow
+[Windows subsystem for Linux](https://docs.CodexLabsLLC.com/en-us/windows/wsl/install-win10) and follow
 the PX4 Linux toolchain setup.
 
 If you are using WSL2 please read these [additional
@@ -37,9 +37,9 @@ instructions](px4_sitl_wsl2.md).
     ```
    If you are using older version v1.8.* use this command instead: `make posix_sitl_ekf2 none_iris`.
 
-4. You should see a message saying the SITL PX4 app is waiting for the simulator (AirSim) to connect.
+4. You should see a message saying the SITL PX4 app is waiting for the simulator (Colosseum) to connect.
 You will also see information about which ports are configured for mavlink connection to the PX4 app.
-The default ports have changed recently, so check them closely to make sure AirSim settings are correct.
+The default ports have changed recently, so check them closely to make sure Colosseum settings are correct.
     ```
     INFO  [simulator] Waiting for simulator to connect on TCP port 4560
     INFO  [init] Mixer: etc/mixers/quad_w.main.mix on /dev/pwm_output0
@@ -51,7 +51,7 @@ The default ports have changed recently, so check them closely to make sure AirS
     list of commands you can enter here.  They are mostly low level PX4
     commands, but some of them can be useful for debugging.
 
-5. Now edit [AirSim settings](settings.md) file to make sure you have matching UDP and TCP port settings:
+5. Now edit [Colosseum settings](settings.md) file to make sure you have matching UDP and TCP port settings:
     ```json
     {
         "SettingsVersion": 1.2,
@@ -86,15 +86,15 @@ The default ports have changed recently, so check them closely to make sure AirS
     ```
     Notice the PX4 `[simulator]` is using TCP, which is why we need to add: `"UseTcp": true,`.
     Notice we are also enabling `LockStep`, see [PX4 LockStep](px4_lockstep.md) for more
-    information. The `Barometer` setting keeps PX4 happy because the default AirSim barometer has a
+    information. The `Barometer` setting keeps PX4 happy because the default Colosseum barometer has a
     bit too much noise generation.  This setting clamps that down a bit which allows PX4 to achieve
     GPS lock more quickly.
 
 6. Open incoming TCP port 4560 and incoming UDP port 14540 using your firewall configuration.
 
-7. Now run your Unreal AirSim environment and it should connect to SITL PX4 via TCP. You should see
+7. Now run your Unreal Colosseum environment and it should connect to SITL PX4 via TCP. You should see
    a bunch of messages from the SITL PX4 window. Specifically, the following messages tell you that
-   AirSim is connected properly and GPS fusion is stable:
+   Colosseum is connected properly and GPS fusion is stable:
     ```
     INFO  [simulator] Simulator connected on UDP port 14560
     INFO  [mavlink] partner IP: 127.0.0.1
@@ -110,7 +110,7 @@ The default ports have changed recently, so check them closely to make sure AirS
    either use XBox 360 Controller or connect your RC using USB (for example, in case of FrSky
    Taranis X9D Plus) or using trainer USB cable to your PC. This makes your RC look like a joystick.
    You will need to do extra set up in QGroundControl to use virtual joystick for RC control.  You
-   do not need to do this unless you plan to fly a drone manually in AirSim.  Autonomous flight
+   do not need to do this unless you plan to fly a drone manually in Colosseum.  Autonomous flight
    using the Python API does not require RC, see `No Remote Control` below.
 
 ## Setting GPS origin
@@ -209,7 +209,7 @@ param set NAV_DLL_ACT 0
 
 ## Setting up multi-vehicle simulation
 
-You can simulate multiple drones in SITL mode using AirSim. However, this requires setting up
+You can simulate multiple drones in SITL mode using Colosseum. However, this requires setting up
 multiple instances of the PX4 firmware simulator to be able to listen for each vehicle's connection
 on a separate TCP port (4560, 4561, etc). Please see [this dedicated page](px4_multi_vehicle.md) for
 instructions on setting up multiple instances of PX4 in SITL mode.

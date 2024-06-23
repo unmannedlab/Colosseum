@@ -1,10 +1,10 @@
 # Download Binaries
 
-You can simply download precompiled binaries and run to get started immediately. If you want to set up your own Unreal environment then please see [these instructions](https://github.com/Microsoft/AirSim/#how-to-get-it).
+You can simply download precompiled binaries and run to get started immediately. If you want to set up your own Unreal environment then please see [these instructions](https://github.com/CodexLabsLLC/Colosseum/#how-to-get-it).
 
 ### Unreal Engine
 
-**Windows, Linux**: Download the binaries for the environment of your choice from the [latest release](https://github.com/Microsoft/AirSim/releases).
+**Windows, Linux**: Download the binaries for the environment of your choice from the [latest release](https://github.com/CodexLabsLLC/Colosseum/releases).
 
 Some pre-compiled environment binaries may include multiple files (i.e. City.zip.001, City.zip.002). Make sure to download both files before starting the environment.
 Use [7zip](https://www.7-zip.org/download.html) to unzip these files. On Linux, pass the first zip file name as argument and it should detect all the other parts as well - `7zz x TrapCamera.zip.001`
@@ -13,7 +13,7 @@ Use [7zip](https://www.7-zip.org/download.html) to unzip these files. On Linux, 
 
 ### Unity (Experimental)
 
-A free environment called Windridge City is available at [Unity Asset Store](https://assetstore.unity.com/) as an experimental release of AirSim on Unity. **Note**: This is an old release, and many of the features and APIs might not work.
+A free environment called Windridge City is available at [Unity Asset Store](https://assetstore.unity.com/) as an experimental release of Colosseum on Unity. **Note**: This is an old release, and many of the features and APIs might not work.
 
 ## Controlling Vehicles
 
@@ -21,7 +21,7 @@ Most of our users typically use [APIs](apis.md) to control the vehicles. However
 
 ## Don't Have Good GPU?
 
-The AirSim binaries, like CityEnviron, requires a beefy GPU to run smoothly. You can run them in low resolution mode by editing the `run.bat` file (if it doesn't exist, create it with the following content) on Windows like this:
+The Colosseum binaries, like CityEnviron, requires a beefy GPU to run smoothly. You can run them in low resolution mode by editing the `run.bat` file (if it doesn't exist, create it with the following content) on Windows like this:
 
 ```batch
 start CityEnviron -ResX=640 -ResY=480 -windowed

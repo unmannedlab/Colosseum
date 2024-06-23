@@ -14,8 +14,8 @@
 * [What do the colors mean in the Segmentation View?](#what-do-the-colors-mean-in-the-segmentation-view)
 * [Unreal 4.xx doesn't look as good as 4.yy](#unreal-4xx-doesnt-look-as-good-as-4yy)
 * [Can I use an XBox controller to fly?](#can-i-use-an-xbox-controller-to-fly)
-* [Can I build a hexacopter with AirSim?](#can-i-build-a-hexacopter-with-airsim)
-* [How do I use AirSim with multiple vehicles?](#how-do-i-use-airsim-with-multiple-vehicles)
+* [Can I build a hexacopter with Colosseum?](#can-i-build-a-hexacopter-with-airsim)
+* [How do I use Colosseum with multiple vehicles?](#how-do-i-use-airsim-with-multiple-vehicles)
 * [What computer do you need?](#what-computer-do-you-need)
 * [How do I report issues?](#how-do-i-report-issues)
 
@@ -40,7 +40,7 @@
 
 ###### Where is the setting file and how do I modify it?
 
->AirSim will create empty settings file at `~/Documents/AirSim/settings.json`. You can view the available [settings options](settings.md).
+>Colosseum will create empty settings file at `~/Documents/Colosseum/settings.json`. You can view the available [settings options](settings.md).
 
 <!-- ======================================================================= -->
 
@@ -65,7 +65,7 @@
 <!-- ======================================================================= -->
 
 ###### I'm getting Eigen not found error when compiling Unreal project.
->This is most likely because AirSim wasn't built and Plugin folder was copied in Unreal project folder. To fix this make sure you [build AirSim](build_windows.md) first (run >`build.cmd` in Windows).
+>This is most likely because Colosseum wasn't built and Plugin folder was copied in Unreal project folder. To fix this make sure you [build Colosseum](build_windows.md) first (run >`build.cmd` in Windows).
 
 <!-- ======================================================================= -->
 
@@ -75,7 +75,7 @@
 
 >![exceptions](images/exceptions.png)
 
->and copy the stack trace of all exceptions you see there during execution that look relevant (for example, there might be an initial exception from VSPerf140 that you can >ignore) then paste these call stacks into a new AirSim GitHub issue, thanks.
+>and copy the stack trace of all exceptions you see there during execution that look relevant (for example, there might be an initial exception from VSPerf140 that you can >ignore) then paste these call stacks into a new Colosseum GitHub issue, thanks.
 
 <!-- ======================================================================= -->
 
@@ -97,20 +97,20 @@
 
 <!-- ======================================================================= -->
 
-###### Can I build a hexacopter with AirSim?
+###### Can I build a hexacopter with Colosseum?
 
->See [how to build a hexacopter](https://github.com/microsoft/airsim/wiki/hexacopter).
+>See [how to build a hexacopter](https://github.com/CodexLabsLLC/airsim/wiki/hexacopter).
 
 <!-- ======================================================================= -->
 
-###### How do I use AirSim with multiple vehicles?
+###### How do I use Colosseum with multiple vehicles?
 
 >Here is [multi-vehicle setup guide](multi_vehicle.md).
 
 <!-- ======================================================================= -->
 
 ###### What computer do you need?
->It depends on how big your Unreal Environment is. The Blocks environment that comes with AirSim is very basic and works on typical laptops. The
+>It depends on how big your Unreal Environment is. The Blocks environment that comes with Colosseum is very basic and works on typical laptops. The
 >[Modular Neighborhood Pack](https://www.unrealengine.com/marketplace/modular-neighborhood-pack) that we use ourselves for research requires GPUs with at least 4GB of RAM. The
 >[Open World environment](https://www.unrealengine.com/marketplace/open-world-demo-collection) needs GPU with 8GB RAM. Our typical development machines have 32GB of RAM and
 >NVIDIA TitanX and a [fast hard drive](hard_drive.md).
@@ -130,12 +130,12 @@
 >Remote Control: Futaba
 >```
 
->If you have modified the default `~/Document/AirSim/settings.json`, please include your
+>If you have modified the default `~/Document/Colosseum/settings.json`, please include your
 >settings also.
 
 >If you are using PX4 then try to [capture log from MavLink or PX4](px4_logging.md).
 
->File an issue through [GitHub Issues](https://github.com/microsoft/airsim/issues).
+>File an issue through [GitHub Issues](https://github.com/CodexLabsLLC/airsim/issues).
 
 <!-- ======================================================================= -->
 ## Others
@@ -147,4 +147,4 @@
 * [Remote Control FAQ](remote_control.md#faq)
 * [Unreal Blocks Environment FAQ](unreal_blocks.md#faq)
 * [Unreal Custom Environment FAQ](unreal_custenv.md#faq)
-* [Packaging AirSim](build_faq.md#packaging-a-binary-including-the-airsim-plugin)
+* [Packaging Colosseum](build_faq.md#packaging-a-binary-including-the-airsim-plugin)

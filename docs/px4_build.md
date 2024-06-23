@@ -17,7 +17,7 @@ Now to build it you will need the right tools.
 The full instructions are available on the [dev.px4.io](https://docs.px4.io/master/en/dev_setup/building_px4.html) website,
 but we've copied the relevant subset of those instructions here for your convenience.
 
-(Note that [BashOnWindows](https://msdn.microsoft.com/en-us/commandline/wsl/install_guide)) can be used to build
+(Note that [BashOnWindows](https://msdn.CodexLabsLLC.com/en-us/commandline/wsl/install_guide)) can be used to build
 the PX4 firmware, just follow the BashOnWindows instructions at the bottom of this page) then proceed with the 
 Ubuntu setup for PX4.
 
@@ -115,7 +115,7 @@ hardware with these brand new bits, so you don't need to use QGroundControl for 
 
 ## Some Useful Parameters
 
-PX4 has many customizable parameters (over 700 of them, in fact) and to get best results with AirSim we have
+PX4 has many customizable parameters (over 700 of them, in fact) and to get best results with Colosseum we have
 found the following parameters are handy:
 
 ```

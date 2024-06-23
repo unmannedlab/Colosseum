@@ -1,10 +1,10 @@
-# Using C++ APIs for AirSim
+# Using C++ APIs for Colosseum
 
 Please read [general API doc](apis.md) first if you haven't already. This document describes C++ examples and other C++ specific details.
 
 ## Quick Start
 
-Fastest way to get started is to open AirSim.sln in Visual Studio 2019. You will see [Hello Car](https://github.com/Microsoft/AirSim/tree/main/HelloCar/) and [Hello Drone](https://github.com/Microsoft/AirSim/tree/main/HelloDrone/) examples in the solution. These examples will show you the include paths and lib paths you will need to setup in your VC++ projects. If you are using Linux then you will specify these paths either in your [cmake file](https://github.com/Microsoft/AirSim/tree/main/cmake//HelloCar/CMakeLists.txt) or on compiler command line.
+Fastest way to get started is to open Colosseum.sln in Visual Studio 2019. You will see [Hello Car](https://github.com/CodexLabsLLC/Colosseum/tree/main/HelloCar/) and [Hello Drone](https://github.com/CodexLabsLLC/Colosseum/tree/main/HelloDrone/) examples in the solution. These examples will show you the include paths and lib paths you will need to setup in your VC++ projects. If you are using Linux then you will specify these paths either in your [cmake file](https://github.com/CodexLabsLLC/Colosseum/tree/main/cmake//HelloCar/CMakeLists.txt) or on compiler command line.
 
 #### Include and Lib Folders
 
@@ -15,11 +15,11 @@ Fastest way to get started is to open AirSim.sln in Visual Studio 2019. You will
 
 ## Hello Car
 
-Here's how to use AirSim APIs using C++ to control simulated car (see also [Python example](apis.md#hello_car)):
+Here's how to use Colosseum APIs using C++ to control simulated car (see also [Python example](apis.md#hello_car)):
 
 ```cpp
 
-// ready to run example: https://github.com/Microsoft/AirSim/blob/main/HelloCar/main.cpp
+// ready to run example: https://github.com/CodexLabsLLC/Colosseum/blob/main/HelloCar/main.cpp
 
 #include <iostream>
 #include "vehicles/car/api/CarRpcLibClient.hpp"
@@ -53,11 +53,11 @@ int main()
 
 ## Hello Drone
 
-Here's how to use AirSim APIs using C++ to control simulated quadrotor (see also [Python example](apis.md#hello_drone)):
+Here's how to use Colosseum APIs using C++ to control simulated quadrotor (see also [Python example](apis.md#hello_drone)):
 
 ```cpp
 
-// ready to run example: https://github.com/Microsoft/AirSim/blob/main/HelloDrone/main.cpp
+// ready to run example: https://github.com/CodexLabsLLC/Colosseum/blob/main/HelloDrone/main.cpp
 
 #include <iostream>
 #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
@@ -88,7 +88,7 @@ int main()
 
 ## See Also
 
-* [Examples](https://github.com/microsoft/AirSim/tree/main/Examples) of how to use internal infrastructure in AirSim in your other projects
-* [DroneShell](https://github.com/microsoft/AirSim/tree/main/DroneShell) app shows how to make simple interface using C++ APIs to control drones
-* [HelloSpawnedDrones](https://github.com/microsoft/AirSim/tree/main/HelloSpawnedDrones) app shows how to make additional vehicles on the fly
+* [Examples](https://github.com/CodexLabsLLC/Colosseum/tree/main/Examples) of how to use internal infrastructure in Colosseum in your other projects
+* [DroneShell](https://github.com/CodexLabsLLC/Colosseum/tree/main/DroneShell) app shows how to make simple interface using C++ APIs to control drones
+* [HelloSpawnedDrones](https://github.com/CodexLabsLLC/Colosseum/tree/main/HelloSpawnedDrones) app shows how to make additional vehicles on the fly
 * [Python APIs](apis.md)

@@ -1,5 +1,5 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<DirectedGraph Layout="Sugiyama" xmlns="http://schemas.microsoft.com/vs/2009/dgml">
+<DirectedGraph Layout="Sugiyama" xmlns="http://schemas.CodexLabsLLC.com/vs/2009/dgml">
   <Nodes>
     <Node Id="Error" Category="Problem" Bounds="89.1793308258057,98.0339187728347,50,25.96" Label="error" UseManualLocation="True" />
     <Node Id="FromMavlinkConnection" Category="Comment" Bounds="147.789671522711,212.443294289141,122.81,25.96" Label="mavlink connection" UseManualLocation="True" />

@@ -1,6 +1,6 @@
 # Playback
 
-AirSim supports playing back the high level commands in a *.mavlink log file that were recorded using the MavLinkTest app
+Colosseum supports playing back the high level commands in a *.mavlink log file that were recorded using the MavLinkTest app
 for the purpose of comparing real and simulated flight.
 The [recording.mavlink](logs/recording.mavlink) is an example of a log file captured using a real drone using the following
 command line:
@@ -16,7 +16,7 @@ looks like this:
 
 ## Side-by-side comparison
 
-Now we can copy the *.mavlink log file recorded by MavLinkTest to the PC running the Unreal simulator with AirSim plugin.
+Now we can copy the *.mavlink log file recorded by MavLinkTest to the PC running the Unreal simulator with Colosseum plugin.
 When the Simulator is running and the drone is parked in a place in a map that has room to do the same maneuvers we can run this
 MavLinkTest command line:
 

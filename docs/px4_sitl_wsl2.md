@@ -1,8 +1,8 @@
 # PX4 Software-in-Loop with WSL 2
 
 The [Windows subsystem for Linux version
-2](https://docs.microsoft.com/en-us/windows/wsl/install-win10) uses a Virtual Machine which has a
-separate IP address from your Windows host machine. This means PX4 cannot find AirSim using
+2](https://docs.CodexLabsLLC.com/en-us/windows/wsl/install-win10) uses a Virtual Machine which has a
+separate IP address from your Windows host machine. This means PX4 cannot find Colosseum using
 "localhost" which is the default behavior for PX4.
 
 You will notice that on Windows `ipconfig` returns a new ethernet adapter for WSL like this (notice
@@ -22,7 +22,7 @@ This address `172.31.64.1` is the address that WSL 2 can use to reach your Windo
 
 Starting with this [PX4 Change
 Request](https://github.com/PX4/PX4-Autopilot/commit/1719ff9892f3c3d034f2b44e94d15527ab09cec6)
-(which correlates to version v1.12.0-beta1 or newer) PX4 in SITL mode can now connect to AirSim on a
+(which correlates to version v1.12.0-beta1 or newer) PX4 in SITL mode can now connect to Colosseum on a
 different (remote) IP address.  To enable this make sure you have a version of PX4 containing this
 fix and set the following environment variable in linux:
 
@@ -38,9 +38,9 @@ Open incoming TCP port 4560 and incoming UDP port 14540 using your firewall conf
 Now on the linux side run `ip address show` and copy the `eth0 inet` address, it should be something
 like `172.31.66.156`.  This is the address Windows needs to know in order to find PX4.
 
-Edit your [AirSim settings](settings.md) file and add `LocalHostIp` to tell AirSim to use the WSL
-ethernet adapter address instead of the default `localhost`.  This will cause AirSim to open the TCP
-port on that adapter which is the address that the PX4 app will be looking for.  Also tell AirSim
+Edit your [Colosseum settings](settings.md) file and add `LocalHostIp` to tell Colosseum to use the WSL
+ethernet adapter address instead of the default `localhost`.  This will cause Colosseum to open the TCP
+port on that adapter which is the address that the PX4 app will be looking for.  Also tell Colosseum
 to connect the `ControlIp` UDP channel by setting `ControlIp` to the magic string `remote`.
 This resolves to the WSL 2 remote ip address found in the TCP socket.
 
@@ -79,7 +79,7 @@ This resolves to the WSL 2 remote ip address found in the TCP socket.
 }
 ```
 See [PX4 LockStep](px4_lockstep.md) for more information.
-The "Barometer" setting keeps PX4 happy because the default AirSim barometer has a bit too much
+The "Barometer" setting keeps PX4 happy because the default Colosseum barometer has a bit too much
 noise generation.  This setting clamps that down a bit.
 
 If your local repo does not include [this PX4 

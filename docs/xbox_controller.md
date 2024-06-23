@@ -1,6 +1,6 @@
 # XBox Controller
 
-To use an XBox controller with AirSim follow these steps:
+To use an XBox controller with Colosseum follow these steps:
 
 1. Connect XBox controller so it shows up in your PC Game Controllers:
 
@@ -17,7 +17,7 @@ box labelled "Use exponential curve on roll,pitch, yaw" because this gives me mo
 small movements.
 
 QGroundControl will find your Pixhawk via the UDP proxy port 14550 setup by MavLinkTest above.
-AirSim will find your Pixhawk via the other UDP server port 14570 also setup by MavLinkTest above.
+Colosseum will find your Pixhawk via the other UDP server port 14570 also setup by MavLinkTest above.
 You can also use all the QGroundControl controls for autonomous flying at this point too.
 
 
@@ -26,7 +26,7 @@ You can also use all the QGroundControl controls for autonomous flying at this p
 MavLinkTest.exe -serial:*,115200 -proxy:127.0.0.1:14550 -server:127.0.0.1:14570
 ```
 
-4. Run AirSim Unreal simulator with these `~/Documents/AirSim/settings.json` settings:
+4. Run Colosseum Unreal simulator with these `~/Documents/Colosseum/settings.json` settings:
 ```
 "Vehicles": {
     "PX4": {

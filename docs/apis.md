@@ -1,10 +1,10 @@
-﻿# AirSim APIs
+﻿# Colosseum APIs
 
 ## Introduction
-AirSim exposes APIs so you can interact with vehicle in the simulation programmatically. You can use these APIs to retrieve images, get state, control the vehicle and so on.
+Colosseum exposes APIs so you can interact with vehicle in the simulation programmatically. You can use these APIs to retrieve images, get state, control the vehicle and so on.
 
 ## Python Quickstart
-If you want to use Python to call AirSim APIs, we recommend using Anaconda with Python 3.5 or later versions however some code may also work with Python 2.7 ([help us](CONTRIBUTING.md) improve compatibility!).
+If you want to use Python to call Colosseum APIs, we recommend using Anaconda with Python 3.5 or later versions however some code may also work with Python 2.7 ([help us](CONTRIBUTING.md) improve compatibility!).
 
 First install this package:
 
@@ -12,15 +12,15 @@ First install this package:
 pip install msgpack-rpc-python
 ```
 
-You can either get AirSim binaries from [releases](https://github.com/Microsoft/AirSim/releases) or compile from the source ([Windows](build_windows.md), [Linux](build_linux.md)). Once you can run AirSim, choose Car as vehicle and then navigate to `PythonClient\car\` folder and run:
+You can either get Colosseum binaries from [releases](https://github.com/CodexLabsLLC/Colosseum/releases) or compile from the source ([Windows](build_windows.md), [Linux](build_linux.md)). Once you can run Colosseum, choose Car as vehicle and then navigate to `PythonClient\car\` folder and run:
 
 ```
 python hello_car.py
 ```
 
-If you are using Visual Studio 2019 then just open AirSim.sln, set PythonClient as startup project and choose `car\hello_car.py` as your startup script.
+If you are using Visual Studio 2019 then just open Colosseum.sln, set PythonClient as startup project and choose `car\hello_car.py` as your startup script.
 
-### Installing AirSim Package
+### Installing Colosseum Package
 You can also install `airsim` package simply by,
 
 ```
@@ -31,20 +31,20 @@ You can find source code and samples for this package in `PythonClient` folder i
 
 **Notes**
 1. You may notice a file `setup_path.py` in our example folders. This file has simple code to detect if `airsim` package is available in parent folder and in that case we use that instead of pip installed package so you always use latest code.
-2. AirSim is still under heavy development which means you might frequently need to update the package to use new APIs.
+2. Colosseum is still under heavy development which means you might frequently need to update the package to use new APIs.
 
 ## C++ Users
 If you want to use C++ APIs and examples, please see [C++ APIs Guide](apis_cpp.md).
 
 ## Hello Car
-Here's how to use AirSim APIs using Python to control simulated car (see also [C++ example](apis_cpp.md#hello_car)):
+Here's how to use Colosseum APIs using Python to control simulated car (see also [C++ example](apis_cpp.md#hello_car)):
 
 ```python
 # ready to run example: PythonClient/car/hello_car.py
 import airsim
 import time
 
-# connect to the AirSim simulator
+# connect to the Colosseum simulator
 client = airsim.CarClient()
 client.confirmConnection()
 client.enableApiControl(True)
@@ -81,14 +81,14 @@ while True:
 ```
 
 ## Hello Drone
-Here's how to use AirSim APIs using Python to control simulated quadrotor (see also [C++ example](apis_cpp.md#hello_drone)):
+Here's how to use Colosseum APIs using Python to control simulated quadrotor (see also [C++ example](apis_cpp.md#hello_drone)):
 
 ```python
 # ready to run example: PythonClient/multirotor/hello_drone.py
 import airsim
 import os
 
-# connect to the AirSim simulator
+# connect to the Colosseum simulator
 client = airsim.MultirotorClient()
 client.confirmConnection()
 client.enableApiControl(True)
@@ -125,20 +125,20 @@ for response in responses:
 * `simGetObjectPose`, `simSetObjectPose`: Gets and sets the pose of specified object in Unreal environment. Here the object means "actor" in Unreal terminology. They are searched by tag as well as name. Please note that the names shown in UE Editor are *auto-generated* in each run and are not permanent. So if you want to refer to actor by name, you must change its auto-generated name in UE Editor. Alternatively you can add a tag to actor which can be done by clicking on that actor in Unreal Editor and then going to [Tags property](https://answers.unrealengine.com/questions/543807/whats-the-difference-between-tag-and-tag.html), click "+" sign and add some string value. If multiple actors have same tag then the first match is returned. If no matches are found then NaN pose is returned. The returned pose is in NED coordinates in SI units in the world frame. For `simSetObjectPose`, the specified actor must have [Mobility](https://docs.unrealengine.com/en-us/Engine/Actors/Mobility) set to Movable or otherwise you will get undefined behavior. The `simSetObjectPose` has parameter `teleport` which means object is [moved through other objects](https://www.unrealengine.com/en-US/blog/moving-physical-objects) in its way and it returns true if move was successful
 
 ### Image / Computer Vision APIs
-AirSim offers comprehensive images APIs to retrieve synchronized images from multiple cameras along with ground truth including depth, disparity, surface normals and vision. You can set the resolution, FOV, motion blur etc parameters in [settings.json](settings.md). There is also API for detecting collision state. See also [complete code](https://github.com/Microsoft/AirSim/tree/main/Examples/DataCollection/StereoImageGenerator.hpp) that generates specified number of stereo images and ground truth depth with normalization to camera plane, computation of disparity image and saving it to [pfm format](pfm.md).
+Colosseum offers comprehensive images APIs to retrieve synchronized images from multiple cameras along with ground truth including depth, disparity, surface normals and vision. You can set the resolution, FOV, motion blur etc parameters in [settings.json](settings.md). There is also API for detecting collision state. See also [complete code](https://github.com/CodexLabsLLC/Colosseum/tree/main/Examples/DataCollection/StereoImageGenerator.hpp) that generates specified number of stereo images and ground truth depth with normalization to camera plane, computation of disparity image and saving it to [pfm format](pfm.md).
 
 More on [image APIs and Computer Vision mode](image_apis.md).
 For vision problems that can benefit from domain randomization, there is also an [object retexturing API](retexturing.md), which can be used in supported scenes.
 
 ### Pause and Continue APIs
-AirSim allows to pause and continue the simulation through `pause(is_paused)` API. To pause the simulation call `pause(True)` and to continue the simulation call `pause(False)`. You may have scenario, especially while using reinforcement learning, to run the simulation for specified amount of time and then automatically pause. While simulation is paused, you may then do some expensive computation, send a new command and then again run the simulation for specified amount of time. This can be achieved by API `continueForTime(seconds)`. This API runs the simulation for the specified number of seconds and then pauses the simulation. For example usage, please see [pause_continue_car.py](https://github.com/Microsoft/AirSim/tree/main/PythonClient//car/pause_continue_car.py) and [pause_continue_drone.py](https://github.com/Microsoft/AirSim/tree/main/PythonClient//multirotor/pause_continue_drone.py).
+Colosseum allows to pause and continue the simulation through `pause(is_paused)` API. To pause the simulation call `pause(True)` and to continue the simulation call `pause(False)`. You may have scenario, especially while using reinforcement learning, to run the simulation for specified amount of time and then automatically pause. While simulation is paused, you may then do some expensive computation, send a new command and then again run the simulation for specified amount of time. This can be achieved by API `continueForTime(seconds)`. This API runs the simulation for the specified number of seconds and then pauses the simulation. For example usage, please see [pause_continue_car.py](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient//car/pause_continue_car.py) and [pause_continue_drone.py](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient//multirotor/pause_continue_drone.py).
 
 
 ### Collision API
 The collision information can be obtained using `simGetCollisionInfo` API. This call returns a struct that has information not only whether collision occurred but also collision position, surface normal, penetration depth and so on.
 
 ### Time of Day API
-AirSim assumes there exist sky sphere of class `EngineSky/BP_Sky_Sphere` in your environment with [ADirectionalLight actor](https://github.com/microsoft/AirSim/blob/v1.4.0-linux/Unreal/Plugins/AirSim/Source/SimMode/SimModeBase.cpp#L224). By default, the position of the sun in the scene doesn't move with time. You can use [settings](settings.md#timeofday) to set up latitude, longitude, date and time which AirSim uses to compute the position of sun in the scene.
+Colosseum assumes there exist sky sphere of class `EngineSky/BP_Sky_Sphere` in your environment with [ADirectionalLight actor](https://github.com/CodexLabsLLC/Colosseum/blob/v1.4.0-linux/Unreal/Plugins/Colosseum/Source/SimMode/SimModeBase.cpp#L224). By default, the position of the sun in the scene doesn't move with time. You can use [settings](settings.md#timeofday) to set up latitude, longitude, date and time which Colosseum uses to compute the position of sun in the scene.
 
 You can also use following API call to set the sun position according to given date time:
 
@@ -180,9 +180,9 @@ class WeatherParameter:
     Fog = 7
 ```
 
-Please note that `Roadwetness`, `RoadSnow` and `RoadLeaf` effects requires adding [materials](https://github.com/Microsoft/AirSim/tree/main/Unreal/Plugins/AirSim/Content/Weather/WeatherFX) to your scene.
+Please note that `Roadwetness`, `RoadSnow` and `RoadLeaf` effects requires adding [materials](https://github.com/CodexLabsLLC/Colosseum/tree/main/Unreal/Plugins/Colosseum/Content/Weather/WeatherFX) to your scene.
 
-Please see [example code](https://github.com/Microsoft/AirSim/blob/main/PythonClient/environment/weather.py) for more details.
+Please see [example code](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/environment/weather.py) for more details.
 
 ### Recording APIs
 
@@ -210,16 +210,16 @@ wind = airsim.Vector3r(20, 0, 0)
 client.simSetWind(wind)
 ```
 
-Also see example script in [set_wind.py](https://github.com/Microsoft/AirSim/blob/main/PythonClient/multirotor/set_wind.py)
+Also see example script in [set_wind.py](https://github.com/CodexLabsLLC/Colosseum/blob/main/PythonClient/multirotor/set_wind.py)
 
 ### Lidar APIs
-AirSim offers API to retrieve point cloud data from Lidar sensors on vehicles. You can set the number of channels, points per second, horizontal and vertical FOV, etc parameters in [settings.json](settings.md).
+Colosseum offers API to retrieve point cloud data from Lidar sensors on vehicles. You can set the number of channels, points per second, horizontal and vertical FOV, etc parameters in [settings.json](settings.md).
 
 More on [lidar APIs and settings](lidar.md) and [sensor settings](sensors.md)
 
 ### Light Control APIs
 
-Lights that can be manipulated inside AirSim can be created via the `simSpawnObject()` API by passing either `PointLightBP` or `SpotLightBP` as the `asset_name` parameter and `True` as the `is_blueprint` parameter. Once a light has been spawned, it can be manipulated using the following API:
+Lights that can be manipulated inside Colosseum can be created via the `simSpawnObject()` API by passing either `PointLightBP` or `SpotLightBP` as the `asset_name` parameter and `True` as the `is_blueprint` parameter. Once a light has been spawned, it can be manipulated using the following API:
 
 * `simSetLightIntensity`: This allows you to edit a light's intensity or brightness. It takes two parameters, `light_name`, the name of the light object returned by a previous call to `simSpawnObject()`, and `intensity`, a float value.
 
@@ -231,10 +231,10 @@ Textures can be dynamically set on objects via these APIs:
 * `simSetObjectMaterialFromTexture`: This sets an object's material using a path to a texture. It takes two string parameters, `object_name` and `texture_path`.
 
 ### Multiple Vehicles
-AirSim supports multiple vehicles and control them through APIs. Please [Multiple Vehicles](multi_vehicle.md) doc.
+Colosseum supports multiple vehicles and control them through APIs. Please [Multiple Vehicles](multi_vehicle.md) doc.
 
 ### Coordinate System
-All AirSim API uses NED coordinate system, i.e., +X is North, +Y is East and +Z is Down. All units are in SI system. Please note that this is different from coordinate system used internally by Unreal Engine. In Unreal Engine, +Z is up instead of down and length unit is in centimeters instead of meters. AirSim APIs takes care of the appropriate conversions. The starting point of the vehicle is always coordinates (0, 0, 0) in NED system. Thus when converting from Unreal coordinates to NED, we first subtract the starting offset and then scale by 100 for cm to m conversion. The vehicle is spawned in Unreal environment where the Player Start component is placed. There is a setting called `OriginGeopoint` in [settings.json](settings.md) which assigns geographic longitude, longitude and altitude to the Player Start component.
+All Colosseum API uses NED coordinate system, i.e., +X is North, +Y is East and +Z is Down. All units are in SI system. Please note that this is different from coordinate system used internally by Unreal Engine. In Unreal Engine, +Z is up instead of down and length unit is in centimeters instead of meters. Colosseum APIs takes care of the appropriate conversions. The starting point of the vehicle is always coordinates (0, 0, 0) in NED system. Thus when converting from Unreal coordinates to NED, we first subtract the starting offset and then scale by 100 for cm to m conversion. The vehicle is spawned in Unreal environment where the Player Start component is placed. There is a setting called `OriginGeopoint` in [settings.json](settings.md) which assigns geographic longitude, longitude and altitude to the Player Start component.
 
 ## Vehicle Specific APIs
 ### APIs for Car
@@ -245,13 +245,13 @@ Car has followings APIs available:
 * [Image APIs](image_apis.md).
 
 ### APIs for Multirotor
-Multirotor can be controlled by specifying angles, velocity vector, destination position or some combination of these. There are corresponding `move*` APIs for this purpose. When doing position control, we need to use some path following algorithm. By default AirSim uses carrot following algorithm. This is often referred to as "high level control" because you just need to specify high level goal and the firmware takes care of the rest. Currently lowest level control available in AirSim is `moveByAngleThrottleAsync` API.
+Multirotor can be controlled by specifying angles, velocity vector, destination position or some combination of these. There are corresponding `move*` APIs for this purpose. When doing position control, we need to use some path following algorithm. By default Colosseum uses carrot following algorithm. This is often referred to as "high level control" because you just need to specify high level goal and the firmware takes care of the rest. Currently lowest level control available in Colosseum is `moveByAngleThrottleAsync` API.
 
 #### getMultirotorState
 This API returns the state of the vehicle in one call. The state includes, collision, estimated kinematics (i.e. kinematics computed by fusing sensors), and timestamp (nano seconds since epoch). The kinematics here means 6 quantities: position, orientation, linear and angular velocity, linear and angular acceleration. Please note that simple_slight currently doesn't support state estimator which means estimated and ground truth kinematics values would be same for simple_flight. Estimated kinematics are however available for PX4 except for angular acceleration. All quantities are in NED coordinate system, SI units in world frame except for angular velocity and accelerations which are in body frame.
 
 #### Async methods, duration and max_wait_seconds
-Many API methods has parameters named `duration` or `max_wait_seconds` and they have *Async* as suffix, for example, `takeoffAsync`. These methods will return immediately after starting the task in AirSim so that your client code can do something else while that task is being executed. If you want to wait for this task to complete then you can call `waitOnLastTask` like this:
+Many API methods has parameters named `duration` or `max_wait_seconds` and they have *Async* as suffix, for example, `takeoffAsync`. These methods will return immediately after starting the task in Colosseum so that your client code can do something else while that task is being executed. If you want to wait for this task to complete then you can call `waitOnLastTask` like this:
 
 ```cpp
 //C++
@@ -263,9 +263,9 @@ client.takeoffAsync()->waitOnLastTask();
 client.takeoffAsync().join()
 ```
 
-If you start another command then it automatically cancels the previous task and starts new command. This allows to use pattern where your coded continuously does the sensing, computes a new trajectory to follow and issues that path to vehicle in AirSim. Each newly issued trajectory cancels the previous trajectory allowing your code to continuously do the update as new sensor data arrives.
+If you start another command then it automatically cancels the previous task and starts new command. This allows to use pattern where your coded continuously does the sensing, computes a new trajectory to follow and issues that path to vehicle in Colosseum. Each newly issued trajectory cancels the previous trajectory allowing your code to continuously do the update as new sensor data arrives.
 
-All *Async* method returns `concurrent.futures.Future` in Python (`std::future` in C++). Please note that these future classes currently do not allow to check status or cancel the task; they only allow to wait for task to complete. AirSim does provide API `cancelLastTask`, however.
+All *Async* method returns `concurrent.futures.Future` in Python (`std::future` in C++). Please note that these future classes currently do not allow to check status or cancel the task; they only allow to wait for task to complete. Colosseum does provide API `cancelLastTask`, however.
 
 #### drivetrain
 There are two modes you can fly vehicle: `drivetrain` parameter is set to `airsim.DrivetrainType.ForwardOnly` or `airsim.DrivetrainType.MaxDegreeOfFreedom`. When you specify ForwardOnly, you are saying that vehicle's front should always point in the direction of travel. So if you want drone to take left turn then it would first rotate so front points to left. This mode is useful when you have only front camera and you are operating vehicle using FPV view. This is more or less like travelling in car where you always have front view. The MaxDegreeOfFreedom means you don't care where the front points to. So when you take left turn, you just start going left like crab. Quadrotors can go in any direction regardless of where front points to. The MaxDegreeOfFreedom enables this mode.
@@ -278,7 +278,7 @@ You can probably see that when `yaw_mode.is_rate == true`, the `drivetrain` para
 In most cases, you just don't want yaw to change which you can do by setting yaw rate of 0. The shorthand for this is `airsim.YawMode.Zero()` (or in C++: `YawMode::Zero()`).
 
 #### lookahead and adaptive_lookahead
-When you ask vehicle to follow a path, AirSim uses "carrot following" algorithm. This algorithm operates by looking ahead on path and adjusting its velocity vector. The parameters for this algorithm is specified by `lookahead` and `adaptive_lookahead`. For most of the time you want algorithm to auto-decide the values by simply setting `lookahead = -1` and `adaptive_lookahead = 0`.
+When you ask vehicle to follow a path, Colosseum uses "carrot following" algorithm. This algorithm operates by looking ahead on path and adjusting its velocity vector. The parameters for this algorithm is specified by `lookahead` and `adaptive_lookahead`. For most of the time you want algorithm to auto-decide the values by simply setting `lookahead = -1` and `adaptive_lookahead = 0`.
 
 ## Using APIs on Real Vehicles
 We want to be able to run *same code* that runs in simulation as on real vehicle. This allows you to test your code in simulator and deploy to real vehicle.
@@ -287,19 +287,19 @@ Generally speaking, APIs therefore shouldn't allow you to do something that cann
 
 The AirLib is self-contained library that you can put on an offboard computing module such as the Gigabyte barebone Mini PC. This module then can talk to the flight controllers such as PX4 using exact same code and flight controller protocol. The code you write for testing in the simulator remains unchanged. See [AirLib on custom drones](custom_drone.md).
 
-## Adding New APIs to AirSim
+## Adding New APIs to Colosseum
 
 See the [Adding New APIs](adding_new_apis.md) page
 
 ## References and Examples
 
 * [C++ API Examples](apis_cpp.md)
-* [Car Examples](https://github.com/Microsoft/AirSim/tree/main/PythonClient//car)
-* [Multirotor Examples](https://github.com/Microsoft/AirSim/tree/main/PythonClient//multirotor)
-* [Computer Vision Examples](https://github.com/Microsoft/AirSim/tree/main/PythonClient//computer_vision)
-* [Move on Path](https://github.com/Microsoft/AirSim/wiki/moveOnPath-demo) demo showing video of fast multirotor flight through Modular Neighborhood environment
-* [Building a Hexacopter](https://github.com/Microsoft/AirSim/wiki/hexacopter)
-* [Building Point Clouds](https://github.com/Microsoft/AirSim/wiki/Point-Clouds)
+* [Car Examples](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient//car)
+* [Multirotor Examples](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient//multirotor)
+* [Computer Vision Examples](https://github.com/CodexLabsLLC/Colosseum/tree/main/PythonClient//computer_vision)
+* [Move on Path](https://github.com/CodexLabsLLC/Colosseum/wiki/moveOnPath-demo) demo showing video of fast multirotor flight through Modular Neighborhood environment
+* [Building a Hexacopter](https://github.com/CodexLabsLLC/Colosseum/wiki/hexacopter)
+* [Building Point Clouds](https://github.com/CodexLabsLLC/Colosseum/wiki/Point-Clouds)
 
 
 ## FAQ
