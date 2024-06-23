@@ -66,7 +66,7 @@ bool WorldSimApi::destroyObject(const std::string& object_name)
         AActor* actor = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
         if (actor) {
             actor->Destroy();
-            result = actor->IsPendingKill();
+            result = !IsValid(actor);
         }
         if (result)
             simmode_->scene_object_map.Remove(FString(object_name.c_str()));
@@ -333,6 +333,16 @@ std::vector<std::string> WorldSimApi::listSceneObjects(const std::string& name_r
     std::vector<std::string> result;
     UAirBlueprintLib::RunCommandOnGameThread([this, &name_regex, &result]() {
         result = UAirBlueprintLib::ListMatchingActors(simmode_, name_regex);
+    },
+                                             true);
+    return result;
+}
+
+std::vector<std::string> WorldSimApi::listSceneObjectsByTag(const std::string& tag_regex) const
+{
+    std::vector<std::string> result;
+    UAirBlueprintLib::RunCommandOnGameThread([this, &tag_regex, &result]() {
+        result = UAirBlueprintLib::ListMatchingActorsByTag(simmode_, tag_regex);
     },
                                              true);
     return result;
@@ -1060,6 +1070,26 @@ std::vector<msr::airlib::DetectionInfo> WorldSimApi::getDetections(ImageCaptureB
         }
     },
                                              true);
+
+    return result;
+}
+
+Vector3r WorldSimApi::findLookAtRotation(const std::string& vehicle_name, const std::string& object_name)
+{
+    Vector3r result = Vector3r::Zero();
+    PawnSimApi* pawn = simmode_->getVehicleSimApi(vehicle_name);
+
+    if (pawn) {
+        AActor* source = pawn->getPawn();
+        UAirBlueprintLib::RunCommandOnGameThread([this, object_name, &source, &result]() {
+            AActor* target = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
+            if (target) {
+                FRotator rot = UAirBlueprintLib::FindLookAtRotation(source, target);
+                result = Vector3r(rot.Pitch, rot.Roll, rot.Yaw);
+            }
+        },
+                                                 true);
+    }
 
     return result;
 }

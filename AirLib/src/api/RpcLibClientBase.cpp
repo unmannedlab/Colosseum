@@ -488,6 +488,11 @@ __pragma(warning(disable : 4239))
             return pimpl_->client.call("simListSceneObjects", name_regex).as<vector<string>>();
         }
 
+        vector<string> RpcLibClientBase::simListSceneObjectsByTag(const string& tag_regex) const
+        {
+            return pimpl_->client.call("simListSceneObjectsByTag", tag_regex).as<vector<string>>();
+        }
+
         std::vector<std::string> RpcLibClientBase::simSwapTextures(const std::string& tags, int tex_id, int component_id, int material_id)
         {
             return pimpl_->client.call("simSwapTextures", tags, tex_id, component_id, material_id).as<vector<string>>();
@@ -576,6 +581,11 @@ __pragma(warning(disable : 4239))
         bool RpcLibClientBase::simCreateVoxelGrid(const msr::airlib::Vector3r& position, const int& x, const int& y, const int& z, const float& res, const std::string& output_file)
         {
             return pimpl_->client.call("simCreateVoxelGrid", RpcLibAdaptorsBase::Vector3r(position), x, y, z, res, output_file).as<bool>();
+        }
+
+        msr::airlib::Vector3r RpcLibClientBase::simFindLookAtRotation(const std::string& vehicle_name, const std::string& object_name) const
+        {
+            return pimpl_->client.call("simFindLookAtRotation", vehicle_name, object_name).as<RpcLibAdaptorsBase::Vector3r>().to();
         }
 
         void RpcLibClientBase::cancelLastTask(const std::string& vehicle_name)

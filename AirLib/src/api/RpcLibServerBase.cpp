@@ -364,6 +364,10 @@ namespace airlib
             return getWorldSimApi()->listSceneObjects(name_regex);
         });
 
+        pimpl_->server.bind("simListSceneObjectsByTag", [&](const std::string& tag_regex) -> std::vector<string> {
+            return getWorldSimApi()->listSceneObjectsByTag(tag_regex);
+        });
+
         pimpl_->server.bind("simLoadLevel", [&](const std::string& level_name) -> bool {
             return getWorldSimApi()->loadLevel(level_name);
         });
@@ -510,6 +514,11 @@ namespace airlib
 
         pimpl_->server.bind("getSettingsString", [&]() -> std::string {
             return getWorldSimApi()->getSettingsString();
+        });
+
+        pimpl_->server.bind("simFindLookAtRotation", [&](const std::string& vehicle_name, const std::string& object_name) -> RpcLibAdaptorsBase::Vector3r {
+            const auto& rot = getWorldSimApi()->findLookAtRotation(vehicle_name, object_name);
+            return RpcLibAdaptorsBase::Vector3r(rot);
         });
 
         //if we don't suppress then server will bomb out for exceptions raised by any method
