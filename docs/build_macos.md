@@ -1,4 +1,6 @@
 # Build Colosseum on macOS
+  
+**THIS IS NOT CURRENTLY SUPPORTED WITH COLOSSEUM AND MAY NOT WORK.**
 
 Only macOS **Catalina (10.15)** has currently been tested. Theoretically, Colosseum should work on higher macOS versions and Apple Silicon hardware, but this path is not offically supported.
 
@@ -16,9 +18,9 @@ Please see instructions [here](docker_ubuntu.md)
 
 1. [Download](https://www.unrealengine.com/download) the Epic Games Launcher. While the Unreal Engine is open source and free to download, registration is still required.
 2. Run the Epic Games Launcher, open the `Library` tab on the left pane.
-   Click on the `Add Versions` which should show the option to download **Unreal 4.27** as shown below. If you have multiple versions of Unreal installed then **make sure 4.27 is set to `current`** by clicking down arrow next to the Launch button for the version.
+   Click on the `Add Versions` which should show the option to download **Unreal 5.3** as shown below. If you have multiple versions of Unreal installed then **make sure 5.3 is set to `current`** by clicking down arrow next to the Launch button for the version.
 
-   **Note**: Colosseum also works with UE >= 4.24, however, we recommend 4.27.
+   **Note**: Colosseum also works with UE >= 4.24, however, we recommend 5.3.
    **Note**: If you have UE 4.16 or older projects, please see the [upgrade guide](unreal_upgrade.md) to upgrade your projects.
 
 ### Build Colosseum
@@ -31,7 +33,7 @@ git clone https://github.com/CodexLabsLLC/Colosseum.git
 cd Colosseum
 ```
 
-By default Colosseum uses clang 8 to build for compatibility with UE 4.25. The setup script will install the right version of cmake, llvm, and eigen.
+By default Colosseum uses clang 12 to build for compatibility with UE 5.3. The setup script will install the right version of cmake, llvm, and eigen.
 
 CMake 3.19.2 is required for building on Apple Silicon.
 
@@ -48,7 +50,7 @@ Finally, you will need an Unreal project that hosts the environment for your veh
 ## How to Use Colosseum
 
 - Browse to `Colosseum/Unreal/Environments/Blocks`.
-- Run `./GenerateProjectFiles.sh <UE_PATH>` from the terminal, where `UE_PATH` is the path to the Unreal installation folder. (By default, this is `/Users/Shared/Epic\ Games/UE_4.27/`) The script creates an XCode workspace by the name Blocks.xcworkspace.
+- Run `./GenerateProjectFiles.sh <UE_PATH>` from the terminal, where `UE_PATH` is the path to the Unreal installation folder. (By default, this is `/Users/Shared/Epic\ Games/UE_5.3/`) The script creates an XCode workspace by the name Blocks.xcworkspace.
 - Open the XCode workspace, and press the Build and run button in the top left.
 - After Unreal Editor loads, press Play button.
 

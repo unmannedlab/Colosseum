@@ -29,4 +29,5 @@ Just add a [GitHub issue](https://github.com/CodexLabsLLC/airsim/issues) with qu
 * [Myned AI](https://www.myned.ai/)
 * [STPLS3D - University of Southern California Institute for Creative Technologies](http://www.stpls3d.com/)
 * [Central Michigan University](http://www.waynenterprises.com/research)
+* [Codex Labs LLC](http://www.codex-labs-llc.com)
 
