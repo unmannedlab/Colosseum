@@ -60,6 +60,8 @@ namespace airlib
         void simSetWeatherParameter(WorldSimApiBase::WeatherParameter param, float val);
 
         vector<string> simListSceneObjects(const string& name_regex = string(".*")) const;
+        vector<string> simListSceneObjectsByTag(const string& tag_regex = string(".*")) const;
+
         Pose simGetObjectPose(const std::string& object_name) const;
         bool simLoadLevel(const string& level_name);
         Vector3r simGetObjectScale(const std::string& object_name) const;
@@ -162,6 +164,8 @@ namespace airlib
 
         void simSetWind(const Vector3r& wind) const;
         void simSetExtForce(const Vector3r& ext_force) const;
+
+        Vector3r simFindLookAtRotation(const std::string& vehicle_name, const std::string& object_name) const;
 
         vector<string> listVehicles();
 

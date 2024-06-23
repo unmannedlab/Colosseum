@@ -52,6 +52,8 @@ public:
     virtual bool setObjectMaterial(const std::string& object_name, const std::string& material_name, const int component_id = 0) override;
     virtual bool setObjectMaterialFromTexture(const std::string& object_name, const std::string& texture_path, const int component_id = 0) override;
     virtual std::vector<std::string> listSceneObjects(const std::string& name_regex) const override;
+    virtual std::vector<std::string> listSceneObjectsByTag(const std::string& tag_regex) const override;
+
     virtual Pose getObjectPose(const std::string& object_name) const override;
     virtual bool setObjectPose(const std::string& object_name, const Pose& pose, bool teleport) override;
     virtual bool runConsoleCommand(const std::string& command) override;
@@ -118,6 +120,8 @@ public:
     virtual void setDetectionFilterRadius(ImageCaptureBase::ImageType image_type, float radius_cm, const CameraDetails& camera_details) override;
     virtual void clearDetectionMeshNames(ImageCaptureBase::ImageType image_type, const CameraDetails& camera_details) override;
     virtual std::vector<msr::airlib::DetectionInfo> getDetections(ImageCaptureBase::ImageType image_type, const CameraDetails& camera_details) override;
+
+    virtual Vector3r findLookAtRotation(const std::string& vehicle_name, const std::string& object_name);
 
 private:
     AActor* createNewStaticMeshActor(const FActorSpawnParameters& spawn_params, const FTransform& actor_transform, const Vector3r& scale, UStaticMesh* static_mesh);

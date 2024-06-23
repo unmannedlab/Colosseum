@@ -122,7 +122,7 @@
     <ClInclude Include="unreal\plugins\airsim\source\AirSimGameMode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="unreal\plugins\airsim\source\CameraDirector.h">
+    <ClInclude Include="unreal\plugins\airsim\source\AirSimCameraDirector.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="unreal\plugins\airsim\source\ManualPoseController.h">

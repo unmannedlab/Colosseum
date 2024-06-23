@@ -30,7 +30,7 @@ if state.landed_state == airsim.LandedState.Landed:
 
 # AirSim uses NED coordinates so negative axis is up.
 # z of -5 is 5 meters above the original launch point.
-z = -5
+z = -30
 print("make sure we are hovering at {} meters...".format(-z))
 client.moveToZAsync(z, 1).join()
 
