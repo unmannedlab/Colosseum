@@ -1,0 +1,3 @@
+[submodule "ExternalRepositories/Colosseum_Eigen"]
+	path = ExternalRepositories/Colosseum_Eigen
+	url = https://github.com/Panics/Colosseum_Eigen.git
