@@ -7,7 +7,7 @@
 #include "ManualPoseController.h"
 #include "common/common_utils/Utils.hpp"
 #include "GameFramework/SpringArmComponent.h"
-#include "AirSimCameraDirector.generated.h"
+#include "CameraManager.generated.h"
 
 UENUM(BlueprintType)
 enum class ECameraDirectorMode : uint8
@@ -23,7 +23,7 @@ enum class ECameraDirectorMode : uint8
 };
 
 UCLASS()
-class AIRSIM_API ACameraDirector : public AActor
+class AIRSIM_API ACameraManager : public AActor
 {
     GENERATED_BODY()
 
@@ -46,7 +46,7 @@ public:
     void inputEventFrontView();
 
 public:
-    ACameraDirector();
+    ACameraManager();
     virtual void BeginPlay() override;
     virtual void EndPlay(const EEndPlayReason::Type EndPlayReason) override;
     virtual void Tick(float DeltaSeconds) override;

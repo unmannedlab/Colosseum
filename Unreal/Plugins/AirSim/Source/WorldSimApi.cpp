@@ -66,7 +66,7 @@ bool WorldSimApi::destroyObject(const std::string& object_name)
         AActor* actor = UAirBlueprintLib::FindActor<AActor>(simmode_, FString(object_name.c_str()));
         if (actor) {
             actor->Destroy();
-            result = !IsValid(actor);
+            result = actor->IsPendingKillPending();
         }
         if (result)
             simmode_->scene_object_map.Remove(FString(object_name.c_str()));
@@ -1047,6 +1047,7 @@ std::vector<msr::airlib::DetectionInfo> WorldSimApi::getDetections(ImageCaptureB
                                             : simmode_->getVehicleSimApi(camera_details.vehicle_name)->getNedTransform();
 
     UAirBlueprintLib::RunCommandOnGameThread([camera, image_type, &result, &ned_transform]() {
+
         const TArray<FDetectionInfo>& detections = camera->getDetectionComponent(image_type, false)->getDetections();
         result.resize(detections.Num());
 
@@ -1055,16 +1056,16 @@ std::vector<msr::airlib::DetectionInfo> WorldSimApi::getDetections(ImageCaptureB
 
             Vector3r nedWrtOrigin = ned_transform.toGlobalNed(detections[i].Actor->GetActorLocation());
             result[i].geo_point = msr::airlib::EarthUtils::nedToGeodetic(nedWrtOrigin,
-                                                                         AirSimSettings::singleton().origin_geopoint);
+                                                                         msr::airlib::AirSimSettings::singleton().origin_geopoint);
 
-            result[i].box2D.min = Vector2r(detections[i].Box2D.Min.X, detections[i].Box2D.Min.Y);
-            result[i].box2D.max = Vector2r(detections[i].Box2D.Max.X, detections[i].Box2D.Max.Y);
+            result[i].box2D.min = msr::airlib::Vector2r(detections[i].Box2D.Min.X, detections[i].Box2D.Min.Y);
+            result[i].box2D.max = msr::airlib::Vector2r(detections[i].Box2D.Max.X, detections[i].Box2D.Max.Y);
 
             result[i].box3D.min = ned_transform.toLocalNed(detections[i].Box3D.Min);
             result[i].box3D.max = ned_transform.toLocalNed(detections[i].Box3D.Max);
 
             const Vector3r& position = ned_transform.toLocalNed(detections[i].RelativeTransform.GetTranslation());
-            const Quaternionr& orientation = ned_transform.toNed(detections[i].RelativeTransform.GetRotation());
+            const msr::airlib::Quaternionr& orientation = ned_transform.toNed(detections[i].RelativeTransform.GetRotation());
 
             result[i].relative_pose = Pose(position, orientation);
         }
