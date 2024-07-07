@@ -28,7 +28,7 @@ namespace airlib_rpclib
         {
             bool is_rate = true;
             float yaw_or_rate = 0;
-            MSGPACK_DEFINE_MAP(is_rate, yaw_or_rate);
+            MSGPACK_DEFINE_ARRAY(is_rate, yaw_or_rate);
 
             YawMode()
             {
@@ -51,7 +51,7 @@ namespace airlib_rpclib
             msr::airlib::real_T torque_scaler;
             msr::airlib::real_T speed;
 
-            MSGPACK_DEFINE_MAP(thrust, torque_scaler, speed);
+            MSGPACK_DEFINE_ARRAY(thrust, torque_scaler, speed);
 
             RotorParameters()
             {
@@ -75,7 +75,7 @@ namespace airlib_rpclib
             std::vector<RotorParameters> rotors;
             uint64_t timestamp;
 
-            MSGPACK_DEFINE_MAP(rotors, timestamp);
+            MSGPACK_DEFINE_ARRAY(rotors, timestamp);
 
             RotorStates()
             {
@@ -113,7 +113,7 @@ namespace airlib_rpclib
             std::vector<std::string> controller_messages;
             bool can_arm;
 
-            MSGPACK_DEFINE_MAP(collision, kinematics_estimated, gps_location, timestamp, landed_state, rc_data);
+            MSGPACK_DEFINE_ARRAY(collision, kinematics_estimated, gps_location, timestamp, landed_state, rc_data);
 
             MultirotorState()
             {

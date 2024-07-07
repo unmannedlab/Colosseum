@@ -27,7 +27,7 @@ There is no `Epic Games Launcher` for Linux which means that if you need to crea
 
     !!!note
 
-        If the Colosseum installation is fresh, i.e, hasn't been built before, make sure that you run `build.cmd` from the root directory once before copying `Unreal\Plugins` folder so that `AirLib` files are also included. If you have made some changes in the Blocks environment, make sure to run `update_to_git.bat` from `Unreal\Environments\Blocks` to update the files in `Unreal\Plugins`.
+        If the Colosseum installation is fresh, i.e, hasn't been built before, make sure that you run `build.cmd` from the root directory once before copying `Unreal\Plugins` folder so that `AirLib` files are also included. If you have made some changes in the Blocks environment, make sure to run `update_to_git.bat` from `Unreal\Environments\BlocksV2` to update the files in `Unreal\Plugins`.
 
 1. Edit the `LandscapeMountains.uproject` so that it looks like this
 
@@ -115,7 +115,7 @@ but you can use any environment. Another free environment is [Infinity Blade ser
 If the environment comes with MatineeActor, delete it to avoid any startup demo sequences. There might be other ways to remove it as well, for example, click on Blueprints button, then Level Blueprint and then look at Begin Play event in Event Graph. You might want to disconnect any connections that may be starting "matinee".
 
 #### Is there easy way to sync code in my Unreal project with code in Colosseum repo?
-Sure, there is! You can find bunch of `.bat` files (for linux, `.sh`) in `Colosseum\Unreal\Environments\Blocks`. Just copy them over to your own Unreal project. Most of these are quite simple and self explanatory.
+Sure, there is! You can find bunch of `.bat` files (for linux, `.sh`) in `Colosseum\Unreal\Environments\BlocksV2`. Just copy them over to your own Unreal project. Most of these are quite simple and self explanatory.
 
 #### I get some error about map.
 You might have to set default map for your project. For example, if you are using Modular Neighborhood Pack, set the Editor Starter Map as well as Game Default Map to Demo_Map in Project Settings > Maps & Modes.

@@ -278,7 +278,7 @@ ModelManifest.xml
 /AirLib/cmake_install.cmake
 /MavLinkCom/lib/libMavLinkCom.a
 /Unreal/Plugins/AirSim/Source/AirLib/
-/Unreal/Environments/Blocks/Plugins/AirSim/
+/Unreal/Environments/BlocksV2/Plugins/AirSim/
 /enc_temp_folder
 /cmake/MavLinkCom/MavLinkTest/MavLinkTest
 /cmake/MavLinkCom/lib/libMavLinkCom.a
@@ -398,7 +398,7 @@ build_docs/
 PythonClient/docs/_build
 
 # Docker
-/docker/Blocks/
+/docker/BlocksV2/
 
 # clangd generated folder, for e.g. from VSCode clangd extension
 .cache/

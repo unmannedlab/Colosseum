@@ -36,7 +36,7 @@ Alternatively, you can use [APIs](apis.md) for programmatic control or use the s
 
 Once Colosseum is set up by following above steps, you can,
 
-1. Double click on .sln file to load the Blocks project in `Unreal\Environments\Blocks` (or .sln file in your own [custom](unreal_custenv.md) Unreal project). If you don't see .sln file then you probably haven't completed steps in Build Unreal Project section above.
+1. Double click on .sln file to load the Blocks project in `Unreal\Environments\BlocksV2` (or .sln file in your own [custom](unreal_custenv.md) Unreal project). If you don't see .sln file then you probably haven't completed steps in Build Unreal Project section above.
 
     **Note**: Unreal 5.3 will auto-generate the .sln file targetting Visual Studio 2019. Visual Studio 2022 will be able to load and run this .sln, but if you want full Visual Studio 2022 support, you will need to explicitly enable support by going to 'Edit->Editor Preferences->Source Code' and selecting 'Visual Studio 2022' for the 'Source Code Editor' setting.
 

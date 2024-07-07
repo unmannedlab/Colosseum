@@ -43,7 +43,7 @@ namespace airlib_rpclib
         struct Vector2r
         {
             msr::airlib::real_T x_val = 0, y_val = 0;
-            MSGPACK_DEFINE_MAP(x_val, y_val);
+            MSGPACK_DEFINE_ARRAY(x_val, y_val);
 
             Vector2r()
             {
@@ -63,7 +63,7 @@ namespace airlib_rpclib
         struct Vector3r
         {
             msr::airlib::real_T x_val = 0, y_val = 0, z_val = 0;
-            MSGPACK_DEFINE_MAP(x_val, y_val, z_val);
+            MSGPACK_DEFINE_ARRAY(x_val, y_val, z_val);
 
             Vector3r()
             {
@@ -92,7 +92,7 @@ namespace airlib_rpclib
             std::string object_name;
             int object_id = -1;
 
-            MSGPACK_DEFINE_MAP(has_collided, penetration_depth, time_stamp, normal, impact_point, position, object_name, object_id);
+            MSGPACK_DEFINE_ARRAY(has_collided, penetration_depth, time_stamp, normal, impact_point, position, object_name, object_id);
 
             CollisionInfo()
             {
@@ -119,7 +119,7 @@ namespace airlib_rpclib
         struct Quaternionr
         {
             msr::airlib::real_T w_val = 1, x_val = 0, y_val = 0, z_val = 0;
-            MSGPACK_DEFINE_MAP(w_val, x_val, y_val, z_val);
+            MSGPACK_DEFINE_ARRAY(w_val, x_val, y_val, z_val);
 
             Quaternionr()
             {
@@ -142,7 +142,7 @@ namespace airlib_rpclib
         {
             Vector3r position;
             Quaternionr orientation;
-            MSGPACK_DEFINE_MAP(position, orientation);
+            MSGPACK_DEFINE_ARRAY(position, orientation);
 
             Pose()
             {
@@ -162,7 +162,7 @@ namespace airlib_rpclib
         {
             double latitude = 0, longitude = 0;
             float altitude = 0;
-            MSGPACK_DEFINE_MAP(latitude, longitude, altitude);
+            MSGPACK_DEFINE_ARRAY(latitude, longitude, altitude);
 
             GeoPoint()
             {
@@ -190,7 +190,7 @@ namespace airlib_rpclib
             bool is_initialized = false; //is RC connected?
             bool is_valid = false; //must be true for data to be valid
 
-            MSGPACK_DEFINE_MAP(timestamp, pitch, roll, throttle, yaw, left_z, right_z, switches, vendor_id, is_initialized, is_valid);
+            MSGPACK_DEFINE_ARRAY(timestamp, pitch, roll, throttle, yaw, left_z, right_z, switches, vendor_id, is_initialized, is_valid);
 
             RCData()
             {
@@ -233,7 +233,7 @@ namespace airlib_rpclib
         {
             float matrix[4][4];
 
-            MSGPACK_DEFINE_MAP(matrix);
+            MSGPACK_DEFINE_ARRAY(matrix);
 
             ProjectionMatrix()
             {
@@ -261,7 +261,7 @@ namespace airlib_rpclib
             Vector2r min;
             Vector2r max;
 
-            MSGPACK_DEFINE_MAP(min, max);
+            MSGPACK_DEFINE_ARRAY(min, max);
 
             Box2D()
             {
@@ -288,7 +288,7 @@ namespace airlib_rpclib
             Vector3r min;
             Vector3r max;
 
-            MSGPACK_DEFINE_MAP(min, max);
+            MSGPACK_DEFINE_ARRAY(min, max);
 
             Box3D()
             {
@@ -318,7 +318,7 @@ namespace airlib_rpclib
             Box3D box3D;
             Pose relative_pose;
 
-            MSGPACK_DEFINE_MAP(name, geo_point, box2D, box3D, relative_pose);
+            MSGPACK_DEFINE_ARRAY(name, geo_point, box2D, box3D, relative_pose);
 
             DetectionInfo()
             {
@@ -371,7 +371,7 @@ namespace airlib_rpclib
             float fov;
             ProjectionMatrix proj_mat;
 
-            MSGPACK_DEFINE_MAP(pose, fov, proj_mat);
+            MSGPACK_DEFINE_ARRAY(pose, fov, proj_mat);
 
             CameraInfo()
             {
@@ -406,7 +406,7 @@ namespace airlib_rpclib
             Vector3r linear_acceleration;
             Vector3r angular_acceleration;
 
-            MSGPACK_DEFINE_MAP(position, orientation, linear_velocity, angular_velocity, linear_acceleration, angular_acceleration);
+            MSGPACK_DEFINE_ARRAY(position, orientation, linear_velocity, angular_velocity, linear_acceleration, angular_acceleration);
 
             KinematicsState()
             {
@@ -447,7 +447,7 @@ namespace airlib_rpclib
             float temperature;
             float air_density;
 
-            MSGPACK_DEFINE_MAP(position, geo_point, gravity, air_pressure, temperature, air_density);
+            MSGPACK_DEFINE_ARRAY(position, geo_point, gravity, air_pressure, temperature, air_density);
 
             EnvironmentState()
             {
@@ -484,7 +484,7 @@ namespace airlib_rpclib
             bool pixels_as_float;
             bool compress;
 
-            MSGPACK_DEFINE_MAP(camera_name, image_type, pixels_as_float, compress);
+            MSGPACK_DEFINE_ARRAY(camera_name, image_type, pixels_as_float, compress);
 
             ImageRequest()
             {
@@ -538,7 +538,7 @@ namespace airlib_rpclib
             int width, height;
             msr::airlib::ImageCaptureBase::ImageType image_type;
 
-            MSGPACK_DEFINE_MAP(image_data_uint8, image_data_float, camera_position, camera_name,
+            MSGPACK_DEFINE_ARRAY(image_data_uint8, image_data_float, camera_position, camera_name,
                                camera_orientation, time_stamp, message, pixels_as_float, compress, width, height, image_type);
 
             ImageResponse()
@@ -615,7 +615,7 @@ namespace airlib_rpclib
             Pose pose;
             std::vector<int> segmentation;
 
-            MSGPACK_DEFINE_MAP(time_stamp, point_cloud, pose, segmentation);
+            MSGPACK_DEFINE_ARRAY(time_stamp, point_cloud, pose, segmentation);
 
             LidarData()
             {
@@ -649,7 +649,7 @@ namespace airlib_rpclib
             Vector3r angular_velocity;
             Vector3r linear_acceleration;
 
-            MSGPACK_DEFINE_MAP(time_stamp, orientation, angular_velocity, linear_acceleration);
+            MSGPACK_DEFINE_ARRAY(time_stamp, orientation, angular_velocity, linear_acceleration);
 
             ImuData()
             {
@@ -683,7 +683,7 @@ namespace airlib_rpclib
             msr::airlib::real_T pressure;
             msr::airlib::real_T qnh;
 
-            MSGPACK_DEFINE_MAP(time_stamp, altitude, pressure, qnh);
+            MSGPACK_DEFINE_ARRAY(time_stamp, altitude, pressure, qnh);
 
             BarometerData()
             {
@@ -716,7 +716,7 @@ namespace airlib_rpclib
             Vector3r magnetic_field_body;
             std::vector<float> magnetic_field_covariance; // not implemented in MagnetometerBase.hpp
 
-            MSGPACK_DEFINE_MAP(time_stamp, magnetic_field_body, magnetic_field_covariance);
+            MSGPACK_DEFINE_ARRAY(time_stamp, magnetic_field_body, magnetic_field_covariance);
 
             MagnetometerData()
             {
@@ -749,7 +749,7 @@ namespace airlib_rpclib
             msr::airlib::GpsBase::GnssFixType fix_type;
             uint64_t time_utc = 0;
 
-            MSGPACK_DEFINE_MAP(geo_point, eph, epv, velocity, fix_type, time_utc);
+            MSGPACK_DEFINE_ARRAY(geo_point, eph, epv, velocity, fix_type, time_utc);
 
             GnssReport()
             {
@@ -786,7 +786,7 @@ namespace airlib_rpclib
             GnssReport gnss;
             bool is_valid = false;
 
-            MSGPACK_DEFINE_MAP(time_stamp, gnss, is_valid);
+            MSGPACK_DEFINE_ARRAY(time_stamp, gnss, is_valid);
 
             GpsData()
             {
@@ -819,7 +819,7 @@ namespace airlib_rpclib
             msr::airlib::real_T max_distance; //m
             Pose relative_pose;
 
-            MSGPACK_DEFINE_MAP(time_stamp, distance, min_distance, max_distance, relative_pose);
+            MSGPACK_DEFINE_ARRAY(time_stamp, distance, min_distance, max_distance, relative_pose);
 
             DistanceSensorData()
             {
@@ -857,7 +857,7 @@ namespace airlib_rpclib
             std::vector<uint32_t> indices;
             std::string name;
 
-            MSGPACK_DEFINE_MAP(position, orientation, vertices, indices, name);
+            MSGPACK_DEFINE_ARRAY(position, orientation, vertices, indices, name);
 
             MeshPositionVertexBuffersResponse()
             {

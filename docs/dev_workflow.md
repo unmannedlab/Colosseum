@@ -14,7 +14,7 @@ We recommend GPUs such as NVidia 1080 or NVidia Titan series with powerful deskt
 ### Overview
 Colosseum is designed as plugin. This means it can't run by itself, you need to put it in an Unreal project (we call it "environment"). So building and testing Colosseum has two steps: (1) build the plugin (2) deploy plugin in Unreal project and run the project. 
 
-The first step is accomplished by build.cmd available in Colosseum root. This command will update everything you need for the plugin in the `Unreal\Plugins` folder. So to deploy the plugin, you just need to copy `Unreal\Plugins` folder in to your Unreal project folder. Next you should remove all  intermediate files in your Unreal project and then regenerate .sln file for your Unreal project. To do this, we have two handy .bat files in `Unreal\Environments\Blocks` folder: `clean.bat` and `GenerateProjectFiles.bat`. So just run these bat files in sequence from root of your Unreal project. Now you are ready to open new .sln in Visual Studio and press F5 to run it.
+The first step is accomplished by build.cmd available in Colosseum root. This command will update everything you need for the plugin in the `Unreal\Plugins` folder. So to deploy the plugin, you just need to copy `Unreal\Plugins` folder in to your Unreal project folder. Next you should remove all  intermediate files in your Unreal project and then regenerate .sln file for your Unreal project. To do this, we have two handy .bat files in `Unreal\Environments\BlocksV2` folder: `clean.bat` and `GenerateProjectFiles.bat`. So just run these bat files in sequence from root of your Unreal project. Now you are ready to open new .sln in Visual Studio and press F5 to run it.
 
 ### Steps
 Below are the steps we use to make changes in Colosseum and test them out. The best way to do development in Colosseum code is to use [Blocks project](unreal_blocks.md). This is the light weight project so compile time is relatively faster. Generally the workflow is,
@@ -25,7 +25,7 @@ REM //Navigate to Colosseum repo folder
 
 git pull                          
 build.cmd                        
-cd Unreal\Environments\Blocks         
+cd Unreal\Environments\BlocksV2      
 update_from_git.bat
 start Blocks.sln
 ```
@@ -37,7 +37,7 @@ After you are done with you code changes, you might want to push your changes ba
 
 ```
 REM //Use x64 Native Tools Command Prompt for VS 2019
-REM //run this from Unreal\Environments\Blocks 
+REM //run this from Unreal\Environments\BlocksV2
 
 update_to_git.bat
 build.cmd

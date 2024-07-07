@@ -32,7 +32,7 @@ namespace airlib_rpclib
             int manual_gear = 0;
             bool gear_immediate = true;
 
-            MSGPACK_DEFINE_MAP(throttle, steering, brake, handbrake, is_manual_gear, manual_gear, gear_immediate);
+            MSGPACK_DEFINE_ARRAY(throttle, steering, brake, handbrake, is_manual_gear, manual_gear, gear_immediate);
 
             CarControls()
             {
@@ -64,7 +64,7 @@ namespace airlib_rpclib
             KinematicsState kinematics_estimated;
             uint64_t timestamp;
 
-            MSGPACK_DEFINE_MAP(speed, gear, rpm, maxrpm, handbrake, kinematics_estimated, timestamp);
+            MSGPACK_DEFINE_ARRAY(speed, gear, rpm, maxrpm, handbrake, kinematics_estimated, timestamp);
 
             CarState()
             {

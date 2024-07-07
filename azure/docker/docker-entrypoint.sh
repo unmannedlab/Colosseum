@@ -1,5 +1,5 @@
 #!/bin/bash
-AIRSIM_EXECUTABLE=/home/airsim_user/Blocks/Blocks.sh
+AIRSIM_EXECUTABLE=/home/airsim_user/BlocksV2/BlocksV2.sh
 
 echo Starting AirSim binary...
 $AIRSIM_EXECUTABLE &

@@ -1075,7 +1075,7 @@ std::vector<msr::airlib::DetectionInfo> WorldSimApi::getDetections(ImageCaptureB
     return result;
 }
 
-Vector3r WorldSimApi::findLookAtRotation(const std::string& vehicle_name, const std::string& object_name)
+msr::airlib::Vector3r WorldSimApi::findLookAtRotation(const std::string& vehicle_name, const std::string& object_name)
 {
     Vector3r result = Vector3r::Zero();
     PawnSimApi* pawn = simmode_->getVehicleSimApi(vehicle_name);

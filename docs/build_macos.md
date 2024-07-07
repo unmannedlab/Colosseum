@@ -49,7 +49,7 @@ Finally, you will need an Unreal project that hosts the environment for your veh
 
 ## How to Use Colosseum
 
-- Browse to `Colosseum/Unreal/Environments/Blocks`.
+- Browse to `Colosseum/Unreal/Environments/BlocksV2`.
 - Run `./GenerateProjectFiles.sh <UE_PATH>` from the terminal, where `UE_PATH` is the path to the Unreal installation folder. (By default, this is `/Users/Shared/Epic\ Games/UE_5.3/`) The script creates an XCode workspace by the name Blocks.xcworkspace.
 - Open the XCode workspace, and press the Build and run button in the top left.
 - After Unreal Editor loads, press Play button.
