@@ -55,7 +55,7 @@ if "%~2"=="" (
 )
 if ERRORLEVEL 1 goto :failed
 
-robocopy "%AirSimPath%\Unreal\Environments\Blocks" . *.bat  /njh /njs /ndl /np
+robocopy "%AirSimPath%\Unreal\Environments\BlocksV2" . *.bat  /njh /njs /ndl /np
 
 CALL update_from_git.bat "%AirSimPath%"
 if ERRORLEVEL 1 goto :failed
