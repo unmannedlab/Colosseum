@@ -23,9 +23,9 @@ fi
 #start Unreal editor with Blocks project
 pushd "$UnrealDir" >/dev/null
 if [ "$(uname)" == "Darwin" ]; then
-    Engine/Binaries/Mac/UE4Editor.app/Contents/MacOS/UE4Editor "$SCRIPT_DIR/Unreal/Environments/Blocks/Blocks.uproject" -game -log
+    Engine/Binaries/Mac/UE4Editor.app/Contents/MacOS/UE4Editor "$SCRIPT_DIR/Unreal/Environments/BlocksV2/BlocksV2.uproject" -game -log
 else
-    Engine/Binaries/Linux/UE4Editor "$SCRIPT_DIR/Unreal/Environments/Blocks/Blocks.uproject" -game -log
+    Engine/Binaries/Linux/UE4Editor "$SCRIPT_DIR/Unreal/Environments/BlocksV2/BlocksV2.uproject" -game -log
 fi
 popd >/dev/null
 

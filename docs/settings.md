@@ -5,21 +5,21 @@ Colosseum is searching for the settings definition in the following order. The f
 
 1. Looking at the (absolute) path specified by the `-settings` command line argument.
 For example, in Windows: `Colosseum.exe -settings="C:\path\to\settings.json"`
-In Linux `./Blocks.sh -settings="/home/$USER/path/to/settings.json"`
+In Linux `./BlocksV2.sh -settings="/home/$USER/path/to/settings.json"`
 
 2. Looking for a json document passed as a command line argument by the `-settings` argument.
 For example, in Windows: `Colosseum.exe -settings={"foo":"bar"}`
-In Linux `./Blocks.sh -settings={"foo":"bar"}`
+In Linux `./BlocksV2.sh -settings={"foo":"bar"}`
 
 3. Looking in the folder of the executable for a file called `settings.json`.
 This will be a deep location where the actual executable of the Editor or binary is stored.
-For e.g. with the Blocks binary, the location searched is `<path-of-binary>/LinuxNoEditor/Blocks/Binaries/Linux/settings.json`.
+For e.g. with the Blocks binary, the location searched is `<path-of-binary>/LinuxNoEditor/BlocksV2/Binaries/Linux/settings.json`.
 
 4. Searching for `settings.json` in the folder from where the executable is launched
 
     This is a top-level directory containing the launch script or executable. For e.g. Linux: `<path-of-binary>/LinuxNoEditor/settings.json`, Windows: `<path-of-binary>/WindowsNoEditor/settings.json`
 
-    Note that this path changes depending on where its invoked from. On Linux, if executing the `Blocks.sh` script from inside LinuxNoEditor folder like `./Blocks.sh`, then the previous mentioned path is used. However, if launched from outside LinuxNoEditor folder such as `./LinuxNoEditor/Blocks.sh`, then `<path-of-binary>/settings.json` will be used.
+    Note that this path changes depending on where its invoked from. On Linux, if executing the `Blocks.sh` script from inside LinuxNoEditor folder like `./BlocksV2.sh`, then the previous mentioned path is used. However, if launched from outside LinuxNoEditor folder such as `./LinuxNoEditor/BlocksV2.sh`, then `<path-of-binary>/settings.json` will be used.
 
 5. Looking in the Colosseum subfolder for a file called `settings.json`. The Colosseum subfolder is located at `Documents\Colosseum` on Windows and `~/Documents/Colosseum` on Linux systems.
 

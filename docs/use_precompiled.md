@@ -30,7 +30,7 @@ start CityEnviron -ResX=640 -ResY=480 -windowed
 For Linux binaries, use the `Blocks.sh` or corresponding shell script as follows -
 
 ```shell
-./Blocks.sh -ResX=640 -ResY=480 -windowed
+./BlocksV2.sh -ResX=640 -ResY=480 -windowed
 ```
 
 Check out all the other [command-line options](https://docs.unrealengine.com/en-US/ProductionPipelines/CommandLineArguments/index.html)

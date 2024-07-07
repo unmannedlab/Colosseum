@@ -41,17 +41,17 @@ Modify it to fetch the specific binary required.
    $ ./run_airsim_image_binary.sh DOCKER_IMAGE_NAME UNREAL_BINARY_SHELL_SCRIPT UNREAL_BINARY_ARGUMENTS -- headless
 ```
 
-   For Blocks, you can do a `$ ./run_airsim_image_binary.sh airsim_binary:10.0-devel-ubuntu18.04 Blocks/Blocks.sh -windowed -ResX=1080 -ResY=720`
+   For Blocks, you can do a `$ ./run_airsim_image_binary.sh airsim_binary:10.0-devel-ubuntu18.04 Blocks/BlocksV2.sh -windowed -ResX=1080 -ResY=720`
 
    * `DOCKER_IMAGE_NAME`: Same as `target_image` parameter in previous step. By default, enter `airsim_binary:10.0-devel-ubuntu18.04`
-   * `UNREAL_BINARY_SHELL_SCRIPT`: for Blocks enviroment, it will be `Blocks/Blocks.sh`
+   * `UNREAL_BINARY_SHELL_SCRIPT`: for Blocks enviroment, it will be `BlocksV2/BlocksV2.sh`
    * [`UNREAL_BINARY_ARGUMENTS`](https://docs.unrealengine.com/en-us/Programming/Basics/CommandLineArguments):
       For airsim, most relevant would be `-windowed`, `-ResX`, `-ResY`. Click on link to see all options.
 
   * Running in Headless mode:
       Suffix `-- headless` at the end:
 ```bash
-$ ./run_airsim_image_binary.sh Blocks/Blocks.sh -- headless
+$ ./run_airsim_image_binary.sh BlocksV2/BlocksV2.sh -- headless
 ```
 
 - [Specifying a `settings.json`](#specifying-settingsjson)
@@ -118,12 +118,12 @@ $ python build_airsim_image.py \
 
 ```bash
 $ /home/ue4/UnrealEngine/Engine/Build/BatchFiles/RunUAT.sh BuildCookRun -platform=Linux -clientconfig=Shipping -serverconfig=Shipping -noP4 -cook -allmaps -build -stage -prereqs -pak -archive \
--archivedirectory=/home/ue4/Binaries/Blocks/ \
--project=/home/ue4/Colosseum/Unreal/Environments/Blocks/Blocks.uproject
+-archivedirectory=/home/ue4/Binaries/BlocksV2/ \
+-project=/home/ue4/Colosseum/Unreal/Environments/BlocksV2/BlocksV2.uproject
 ```
 
-This would create a Blocks binary in `/home/ue4/Binaries/Blocks/`.
-You can test it by running `/home/ue4/Binaries/Blocks/LinuxNoEditor/Blocks.sh -windowed`
+This would create a Blocks binary in `/home/ue4/Binaries/BlocksV2/`.
+You can test it by running `/home/ue4/Binaries/BlocksV2/LinuxNoEditor/BlocksV2.sh -windowed`
 
 ### Specifying settings.json
 #### `airsim_binary` docker image:
