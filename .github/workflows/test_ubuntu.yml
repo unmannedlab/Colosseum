@@ -34,12 +34,13 @@ jobs:
           source /opt/ros/*/setup.bash
           cd ros2
           colcon build --cmake-args -DCMAKE_C_COMPILER=gcc-8 --cmake-args -DCMAKE_CXX_COMPILER=g++-8
-          
-      - name: Build GazeboDrone
-        run: |
-          sudo apt-get install -qq libgazebo9-dev gcc-12 g++-12
-          ./clean.sh && ./build.sh --gcc
-          cd GazeboDrone
-          mkdir build && cd build
-          cmake -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 ..
-          make
+
+      # Removing support for GazeboDrone. Gazebo is dead. Long live AirSim/Colosseum.
+      # - name: Build GazeboDrone
+      #   run: |
+      #     sudo apt-get install -qq libgazebo9-dev gcc-12 g++-12
+      #     ./clean.sh && ./build.sh --gcc
+      #     cd GazeboDrone
+      #     mkdir build && cd build
+      #     cmake -DCMAKE_C_COMPILER=gcc-12 -DCMAKE_CXX_COMPILER=g++-12 ..
+      #     make
