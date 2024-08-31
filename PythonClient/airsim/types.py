@@ -12,7 +12,16 @@ class MsgpackMixin:
         return "<" + type(self).__name__ + "> " + pformat(vars(self), indent=4, width=1)
 
     def to_msgpack(self, *args, **kwargs):
-        return self.__dict__
+        encoded = []
+        for attr_name, attr_type in self.attribute_order:
+            value = getattr(self, attr_name)
+            if isinstance(value, list) and value and isinstance(value[0], MsgpackMixin):
+                encoded.append([v.to_msgpack() for v in value])
+            elif isinstance(value, MsgpackMixin):
+                encoded.append(value.to_msgpack())
+            else:
+                encoded.append(value)
+        return encoded
 
     @classmethod
     def from_msgpack(cls, encoded):
@@ -435,8 +444,9 @@ class ImageRequest(MsgpackMixin):
 
 
 class ImageResponse(MsgpackMixin):
-    image_data_uint8 = np.uint8(0)
-    image_data_float = 0.0
+    image_data_uint8 = np.array([], dtype=np.uint8)
+    image_data_float = np.array([], dtype=float)
+    camera_name = ''
     camera_position = Vector3r()
     camera_orientation = Quaternionr()
     time_stamp = np.uint64(0)
@@ -449,8 +459,9 @@ class ImageResponse(MsgpackMixin):
 
     attribute_order = [
         ('image_data_uint8', np.ndarray),
-        ('image_data_float', float),
+        ('image_data_float', np.ndarray),
         ('camera_position', Vector3r),
+        ('camera_name', str),
         ('camera_orientation', Quaternionr),
         ('time_stamp', np.uint64),
         ('message', str),
@@ -614,14 +625,14 @@ class CameraInfo(MsgpackMixin):
 
 
 class LidarData(MsgpackMixin):
-    point_cloud = 0.0
     time_stamp = np.uint64(0)
+    point_cloud = 0.0
     pose = Pose()
     segmentation = 0
 
     attribute_order = [
-        ('point_cloud', float),
         ('time_stamp', np.uint64),
+        ('point_cloud', float),
         ('pose', Pose),
         ('segmentation', int)
     ]
