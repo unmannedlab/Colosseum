@@ -14,6 +14,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include "sensors/imu/ImuBase.hpp"
 #include "vehicles/multirotor/api/MultirotorRpcLibClient.hpp"
 #include "vehicles/car/api/CarRpcLibClient.hpp"
+#include "vehicles/warthog/api/WarthogRpcLibClient.hpp"
 #include "yaml-cpp/yaml.h"
 #include <airsim_ros_pkgs/GimbalAngleEulerCmd.h>
 #include <airsim_ros_pkgs/GimbalAngleQuatCmd.h>
@@ -26,7 +27,9 @@ STRICT_MODE_OFF //todo what does this do?
 #include <airsim_ros_pkgs/VelCmd.h>
 #include <airsim_ros_pkgs/VelCmdGroup.h>
 #include <airsim_ros_pkgs/CarControls.h>
+#include <airsim_ros_pkgs/WarthogControls.h>
 #include <airsim_ros_pkgs/CarState.h>
+#include <airsim_ros_pkgs/WarthogState.h>
 #include <airsim_ros_pkgs/Environment.h>
 #include <chrono>
 #include <cv_bridge/cv_bridge.h>
@@ -131,7 +134,8 @@ public:
     enum class AIRSIM_MODE : unsigned
     {
         DRONE,
-        CAR
+        CAR,
+	WARTHOG
     };
 
     AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip);
@@ -218,7 +222,7 @@ private:
 
     /// ROS timer callbacks
     void img_response_timer_cb(const ros::TimerEvent& event); // update images from airsim_client_ every nth sec
-    void drone_state_timer_cb(const ros::TimerEvent& event); // update drone state from airsim_client_ every nth sec
+    void drone_state_timer_cb(const ros::WallTimerEvent& event); // update drone state from airsim_client_ every nth sec
     void lidar_timer_cb(const ros::TimerEvent& event);
 
     /// ROS subscriber callbacks
@@ -370,7 +374,7 @@ private:
 
     /// ROS Timers.
     ros::Timer airsim_img_response_timer_;
-    ros::Timer airsim_control_update_timer_;
+    ros::WallTimer airsim_control_update_timer_;
     ros::Timer airsim_lidar_update_timer_;
 
     typedef std::pair<std::vector<ImageRequest>, std::string> airsim_img_request_vehicle_name_pair;

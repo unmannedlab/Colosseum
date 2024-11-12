@@ -4,6 +4,7 @@
 // PLUGINLIB_EXPORT_CLASS(AirsimROSWrapper, nodelet::Nodelet)
 #include "common/AirSimSettings.hpp"
 #include <tf2_sensor_msgs/tf2_sensor_msgs.h>
+#include <geometry_msgs/Twist.h>
 
 constexpr char AirsimROSWrapper::CAM_YML_NAME[];
 constexpr char AirsimROSWrapper::WIDTH_YML_NAME[];
@@ -41,13 +42,17 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
 {
     ros_clock_.clock.fromSec(0);
 
-    if (AirSimSettings::singleton().simmode_name != AirSimSettings::kSimModeTypeCar) {
+    if (AirSimSettings::singleton().simmode_name == AirSimSettings::kSimModeTypeMultirotor) {
         airsim_mode_ = AIRSIM_MODE::DRONE;
         ROS_INFO("Setting ROS wrapper to DRONE mode");
     }
-    else {
+    else if(AirSimSettings::singleton().simmode_name == AirSimSettings::kSimModeTypeCar){
         airsim_mode_ = AIRSIM_MODE::CAR;
         ROS_INFO("Setting ROS wrapper to CAR mode");
+    }
+    else {
+        airsim_mode_ = AIRSIM_MODE::WARTHOG;
+        ROS_INFO("Setting ROS wrapper to WARTHOG mode");
     }
 
     initialize_ros();
@@ -63,8 +68,11 @@ void AirsimROSWrapper::initialize_airsim()
         if (airsim_mode_ == AIRSIM_MODE::DRONE) {
             airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
         }
-        else {
+        else if(airsim_mode_ == AIRSIM_MODE::CAR){
             airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
+        }
+        else {
+            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_));
         }
         airsim_client_->confirmConnection();
         airsim_client_images_.confirmConnection();
@@ -105,7 +113,10 @@ void AirsimROSWrapper::initialize_ros()
     // nh_.getParam("max_horz_vel", max_horz_vel_)
 
     create_ros_pubs_from_settings_json();
-    airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
+    //airsim_control_update_timer_ = nh_private_.createWallTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
+    //airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
+    airsim_control_update_timer_ = nh_private_.createWallTimer(ros::WallDuration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
+    //airsim_control_update_timer_ = nh_private_.createTimer(ros::Duration(update_airsim_control_every_n_sec), &AirsimROSWrapper::drone_state_timer_cb, this);
 }
 
 // XmlRpc::XmlRpcValue can't be const in this case
@@ -944,7 +955,7 @@ msr::airlib::CarRpcLibClient* AirsimROSWrapper::get_car_client()
     return static_cast<msr::airlib::CarRpcLibClient*>(airsim_client_.get());
 }
 
-void AirsimROSWrapper::drone_state_timer_cb(const ros::TimerEvent& event)
+void AirsimROSWrapper::drone_state_timer_cb(const ros::WallTimerEvent& event)
 {
     try {
         // todo this is global origin
