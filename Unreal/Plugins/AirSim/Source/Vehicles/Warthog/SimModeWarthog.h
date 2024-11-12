@@ -3,13 +3,13 @@
 #include "CoreMinimal.h"
 
 #include "SimMode/SimModeBase.h"
-#include "CarPawn.h"
+#include "WarthogPawn.h"
 #include "common/Common.hpp"
 #include "api/VehicleSimApiBase.hpp"
-#include "SimModeCar.generated.h"
+#include "SimModeWarthog.generated.h"
 
 UCLASS()
-class AIRSIM_API ASimModeCar : public ASimModeBase
+class AIRSIM_API ASimModeWarthog : public ASimModeBase
 {
     GENERATED_BODY()
 
@@ -25,7 +25,7 @@ private:
     typedef common_utils::Utils Utils;
     typedef msr::airlib::TTimePoint TTimePoint;
     typedef msr::airlib::TTimeDelta TTimeDelta;
-    typedef ACarPawn TVehiclePawn;
+    typedef AWarthogPawn TVehiclePawn;
     typedef msr::airlib::VehicleSimApiBase VehicleSimApiBase;
     typedef msr::airlib::VectorMath VectorMath;
     typedef msr::airlib::Vector3r Vector3r;
@@ -35,7 +35,7 @@ private:
 
 protected:
     virtual void setupClockSpeed() override;
-    //virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const override;
+//    virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const override;
     virtual std::vector<std::unique_ptr<msr::airlib::ApiServerBase>> createApiServer() const override;
     virtual void getExistingVehiclePawns(TArray<AActor*>& pawns) const override;
     virtual bool isVehicleTypeSupported(const std::string& vehicle_type) const override;

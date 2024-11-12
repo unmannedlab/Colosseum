@@ -19,7 +19,9 @@ public:
 
 protected: //overrides
     virtual void setupClockSpeed() override;
-    virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const override;
+    //both changing single api to multiples
+    //virtual std::unique_ptr<msr::airlib::ApiServerBase> createApiServer() const override;
+    virtual std::vector<std::unique_ptr<msr::airlib::ApiServerBase>>createApiServer() const override;
     virtual void getExistingVehiclePawns(TArray<AActor*>& pawns) const override;
     virtual bool isVehicleTypeSupported(const std::string& vehicle_type) const override;
     virtual std::string getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const override;

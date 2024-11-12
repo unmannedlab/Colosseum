@@ -1,48 +1,46 @@
-#include "SimModeCar.h"
+#include "SimModeWarthog.h"
 #include "UObject/ConstructorHelpers.h"
 
 #include "AirBlueprintLib.h"
 #include "common/AirSimSettings.hpp"
-#include "CarPawnSimApi.h"
+#include "WarthogPawnSimApi.h"
 #include "AirBlueprintLib.h"
 #include "common/Common.hpp"
 #include "common/EarthUtils.hpp"
-#include "vehicles/car/api/CarRpcLibServer.hpp"
+#include "vehicles/warthog/api/WarthogRpcLibServer.hpp"
 
 extern CORE_API uint32 GFrameNumber;
 
-void ASimModeCar::BeginPlay()
+void ASimModeWarthog::BeginPlay()
 {
     Super::BeginPlay();
 
     initializePauseState();
 }
 
-void ASimModeCar::initializePauseState()
+void ASimModeWarthog::initializePauseState()
 {
     pause_period_ = 0;
     pause_period_start_ = 0;
     pause(false);
 }
 
-void ASimModeCar::continueForTime(double seconds)
+void ASimModeWarthog::continueForTime(double seconds)
 {
     pause_period_start_ = ClockFactory::get()->nowNanos();
-    pause_period_ = seconds * current_clockspeed_;
+    pause_period_ = seconds;
     pause(false);
 }
 
-void ASimModeCar::continueForFrames(uint32_t frames)
+void ASimModeWarthog::continueForFrames(uint32_t frames)
 {
     targetFrameNumber_ = GFrameNumber + frames;
     frame_countdown_enabled_ = true;
     pause(false);
 }
 
-void ASimModeCar::setupClockSpeed()
+void ASimModeWarthog::setupClockSpeed()
 {
-    Super::setupClockSpeed();
-
     current_clockspeed_ = getSettings().clock_speed;
 
     //setup clock in PhysX
@@ -50,12 +48,9 @@ void ASimModeCar::setupClockSpeed()
     UAirBlueprintLib::LogMessageString("Clock Speed: ", std::to_string(current_clockspeed_), LogDebugLevel::Informational);
 }
 
-void ASimModeCar::Tick(float DeltaSeconds)
+void ASimModeWarthog::Tick(float DeltaSeconds)
 {
     Super::Tick(DeltaSeconds);
-
-    if (!isPaused())
-        ClockFactory::get()->stepBy(DeltaSeconds);
 
     if (pause_period_start_ > 0) {
         if (ClockFactory::get()->elapsedSince(pause_period_start_) >= pause_period_) {
@@ -78,69 +73,77 @@ void ASimModeCar::Tick(float DeltaSeconds)
 
 //-------------------------------- overrides -----------------------------------------------//
 
-//std::unique_ptr<msr::airlib::ApiServerBase> ASimModeCar::createApiServer() const
-std::vector<std::unique_ptr<msr::airlib::ApiServerBase>> ASimModeCar::createApiServer() const
+std::vector<std::unique_ptr<msr::airlib::ApiServerBase>> ASimModeWarthog::createApiServer() const
 {
     std::vector<std::unique_ptr<msr::airlib::ApiServerBase>> api_servers;
 #ifdef AIRLIB_NO_RPC
+    //return ASimModeBase::createApiServer();
     api_servers.push_back(ASimModeBase::createApiServer());
     return api_servers;
-    //return ASimModeBase::createApiServer();
 #else
-    api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::CarRpcLibServer(
+    //return std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::WarthogRpcLibServer(
+      //  getApiProvider(), getSettings().api_server_address, getSettings().api_port));
+    api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::WarthogRpcLibServer(
         getApiProvider(), getSettings().api_server_address, getSettings().api_port)));
     return api_servers;
 #endif
 }
-
-void ASimModeCar::getExistingVehiclePawns(TArray<AActor*>& pawns) const
+/*std::unique_ptr<msr::airlib::ApiServerBase> ASimModeWarthog::createApiServer() const
+{
+#ifdef AIRLIB_NO_RPC
+    return ASimModeBase::createApiServer();
+#else
+    return std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::WarthogRpcLibServer(
+        getApiProvider(), getSettings().api_server_address, getSettings().api_port));
+#endif
+}*/
+void ASimModeWarthog::getExistingVehiclePawns(TArray<AActor*>& pawns) const
 {
     UAirBlueprintLib::FindAllActor<TVehiclePawn>(this, pawns);
 }
 
-bool ASimModeCar::isVehicleTypeSupported(const std::string& vehicle_type) const
+bool ASimModeWarthog::isVehicleTypeSupported(const std::string& vehicle_type) const
 {
-    return ((vehicle_type == AirSimSettings::kVehicleTypePhysXCar) ||
-            (vehicle_type == AirSimSettings::kVehicleTypeArduRover));
+    return (vehicle_type == AirSimSettings::kVehicleTypeWarthog);
 }
 
-std::string ASimModeCar::getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const
+std::string ASimModeWarthog::getVehiclePawnPathName(const AirSimSettings::VehicleSetting& vehicle_setting) const
 {
     //decide which derived BP to use
     std::string pawn_path = vehicle_setting.pawn_path;
     if (pawn_path == "")
-        pawn_path = "DefaultCar";
+        pawn_path = "DefaultWarthog";
 
     return pawn_path;
 }
 
-PawnEvents* ASimModeCar::getVehiclePawnEvents(APawn* pawn) const
+PawnEvents* ASimModeWarthog::getVehiclePawnEvents(APawn* pawn) const
 {
     return static_cast<TVehiclePawn*>(pawn)->getPawnEvents();
 }
-const common_utils::UniqueValueMap<std::string, APIPCamera*> ASimModeCar::getVehiclePawnCameras(
+const common_utils::UniqueValueMap<std::string, APIPCamera*> ASimModeWarthog::getVehiclePawnCameras(
     APawn* pawn) const
 {
     return (static_cast<const TVehiclePawn*>(pawn))->getCameras();
 }
-void ASimModeCar::initializeVehiclePawn(APawn* pawn)
+void ASimModeWarthog::initializeVehiclePawn(APawn* pawn)
 {
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn);
     vehicle_pawn->initializeForBeginPlay(getSettings().engine_sound);
 }
-std::unique_ptr<PawnSimApi> ASimModeCar::createVehicleSimApi(
+std::unique_ptr<PawnSimApi> ASimModeWarthog::createVehicleSimApi(
     const PawnSimApi::Params& pawn_sim_api_params) const
 {
     auto vehicle_pawn = static_cast<TVehiclePawn*>(pawn_sim_api_params.pawn);
-    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new CarPawnSimApi(pawn_sim_api_params,
+    auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new WarthogPawnSimApi(pawn_sim_api_params,
                                                                          vehicle_pawn->getKeyBoardControls()));
     vehicle_sim_api->initialize();
     vehicle_sim_api->reset();
     return vehicle_sim_api;
 }
-msr::airlib::VehicleApiBase* ASimModeCar::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
+msr::airlib::VehicleApiBase* ASimModeWarthog::getVehicleApi(const PawnSimApi::Params& pawn_sim_api_params,
                                                         const PawnSimApi* sim_api) const
 {
-    const auto car_sim_api = static_cast<const CarPawnSimApi*>(sim_api);
-    return car_sim_api->getVehicleApi();
+    const auto warthog_sim_api = static_cast<const WarthogPawnSimApi*>(sim_api);
+    return warthog_sim_api->getVehicleApi();
 }

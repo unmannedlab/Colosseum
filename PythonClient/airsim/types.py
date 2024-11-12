@@ -511,8 +511,16 @@ class CarControls(MsgpackMixin):
             self.is_manual_gear = False
             self.manual_gear = -1
             self.throttle = - abs(throttle_val)
-
-
+class WarthogControls(MsgpackMixin):
+    linear_vel = 0.0
+    angular_vel = 0.0
+    attribute_order = [
+        ('linear_vel', float),
+        ('angular_vel', float)
+        ]
+    def __init__(self, linear_vel = 0, angular_vel = 0):
+        self.linear_vel = linear_vel
+        self.angular_vel = angular_vel
 class KinematicsState(MsgpackMixin):
     position = Vector3r()
     orientation = Quaternionr()
@@ -569,7 +577,18 @@ class CarState(MsgpackMixin):
         ('kinematics_estimated', KinematicsState),
         ('timestamp', np.uint64)
     ]
-
+class WarthogState(MsgpackMixin):
+    linear_vel = 0.0
+    angular_vel = 0.0
+    #collision = CollisionInfo()
+    kinematics_estimated = KinematicsState()
+    timestamp = np.uint64(0)
+    attribute_order = [
+        ('linear_vel', float),
+        ('angular_vel', float),
+        ('kinematics_estimated', KinematicsState),
+        ('timestamp', np.uint64)
+    ]
 
 class MultirotorState(MsgpackMixin):
     collision = CollisionInfo()
