@@ -143,7 +143,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         nh_.setParam("/vehicle_name", curr_vehicle_name);
 
-	ROS_INFO("%f\n", (vehicle_setting->position.x()));
+	ROS_INFO("%s\n", (vehicle_setting->vehicle_name));
 
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
