@@ -70,24 +70,24 @@ void AirsimROSWrapper::initialize_airsim()
     try {
 
         if (airsim_mode_ == AIRSIM_MODE::DRONE) {
-            airsim_client_drone_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_drone_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
             airsim_client_drone_->confirmConnection();
             origin_geo_point_ = airsim_client_drone_->getHomeGeoPoint("");
         }
         else if(airsim_mode_ == AIRSIM_MODE::CAR){
-            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
+            airsim_client_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
             airsim_client_->confirmConnection();
             origin_geo_point_ = airsim_client_->getHomeGeoPoint("");
         }
         else if(airsim_mode_ == AIRSIM_MODE::WARTHOG){
-            airsim_client_warthog_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_));
+            airsim_client_warthog_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_));
             airsim_client_warthog_->confirmConnection();
             origin_geo_point_ = airsim_client_warthog_->getHomeGeoPoint("");
         }
         else if(airsim_mode_ == AIRSIM_MODE::BOTH){
-            airsim_client_warthog_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_, warthog_port_));
+            airsim_client_warthog_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_, warthog_port_));
             airsim_client_warthog_->confirmConnection();
-            airsim_client_drone_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_drone_ = std::shared_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
             airsim_client_drone_->confirmConnection();
             origin_geo_point_ = airsim_client_warthog_->getHomeGeoPoint("");
         }
@@ -1286,32 +1286,41 @@ void AirsimROSWrapper::publish_vehicle_state()
 
         // ground truth GPS position from sim/HITL
         vehicle_ros->global_gps_pub.publish(vehicle_ros->gps_sensor_msg);
-
+        std::shared_ptr<msr::airlib::RpcLibClientBase> airsim_client_temp;
+        if(vehicle_ros->vehicle_type == "physxcar"){
+            airsim_client_temp = airsim_client_;
+        }
+        if(vehicle_ros->vehicle_type == "simpleflight"){
+            airsim_client_temp = airsim_client_drone_;
+        }
+        if(vehicle_ros->vehicle_type == "warthog"){
+            airsim_client_temp = airsim_client_warthog_;
+        }
         for (auto& sensor_publisher : vehicle_ros->sensor_pubs) {
             switch (sensor_publisher.sensor_type) {
             case SensorBase::SensorType::Barometer: {
-                auto baro_data = airsim_client_->getBarometerData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
+                auto baro_data = airsim_client_temp->getBarometerData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
                 airsim_ros_pkgs::Altimeter alt_msg = get_altimeter_msg_from_airsim(baro_data);
                 alt_msg.header.frame_id = vehicle_ros->vehicle_name;
                 sensor_publisher.publisher.publish(alt_msg);
                 break;
             }
             case SensorBase::SensorType::Imu: {
-                auto imu_data = airsim_client_->getImuData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
+                auto imu_data = airsim_client_temp->getImuData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
                 sensor_msgs::Imu imu_msg = get_imu_msg_from_airsim(imu_data);
                 imu_msg.header.frame_id = vehicle_ros->vehicle_name;
                 sensor_publisher.publisher.publish(imu_msg);
                 break;
             }
             case SensorBase::SensorType::Distance: {
-                auto distance_data = airsim_client_->getDistanceSensorData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
+                auto distance_data = airsim_client_temp->getDistanceSensorData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
                 sensor_msgs::Range dist_msg = get_range_from_airsim(distance_data);
                 dist_msg.header.frame_id = vehicle_ros->vehicle_name;
                 sensor_publisher.publisher.publish(dist_msg);
                 break;
             }
             case SensorBase::SensorType::Gps: {
-                auto gps_data = airsim_client_->getGpsData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
+                auto gps_data = airsim_client_temp->getGpsData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
                 sensor_msgs::NavSatFix gps_msg = get_gps_msg_from_airsim(gps_data);
                 gps_msg.header.frame_id = vehicle_ros->vehicle_name;
                 sensor_publisher.publisher.publish(gps_msg);
@@ -1322,7 +1331,7 @@ void AirsimROSWrapper::publish_vehicle_state()
                 break;
             }
             case SensorBase::SensorType::Magnetometer: {
-                auto mag_data = airsim_client_->getMagnetometerData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
+                auto mag_data = airsim_client_temp->getMagnetometerData(sensor_publisher.sensor_name, vehicle_ros->vehicle_name);
                 sensor_msgs::MagneticField mag_msg = get_mag_msg_from_airsim(mag_data);
                 mag_msg.header.frame_id = vehicle_ros->vehicle_name;
                 sensor_publisher.publisher.publish(mag_msg);
