@@ -50,9 +50,13 @@ AirsimROSWrapper::AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHan
         airsim_mode_ = AIRSIM_MODE::CAR;
         ROS_INFO("Setting ROS wrapper to CAR mode");
     }
-    else {
+    else if(AirSimSettings::singleton().simmode_name == AirSimSettings::kSimModeTypeWarthog){
         airsim_mode_ = AIRSIM_MODE::WARTHOG;
         ROS_INFO("Setting ROS wrapper to WARTHOG mode");
+    }
+    else if(AirSimSettings::singleton().simmode_name == AirSimSettings::kSimModeTypeBoth){
+        airsim_mode_ = AIRSIM_MODE::BOTH;
+        ROS_INFO("Setting ROS wrapper to BOTH mode");
     }
 
     initialize_ros();
@@ -66,24 +70,56 @@ void AirsimROSWrapper::initialize_airsim()
     try {
 
         if (airsim_mode_ == AIRSIM_MODE::DRONE) {
-            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_drone_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_drone_->confirmConnection();
+            origin_geo_point_ = airsim_client_drone_->getHomeGeoPoint("");
         }
         else if(airsim_mode_ == AIRSIM_MODE::CAR){
             airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
+            airsim_client_->confirmConnection();
+            origin_geo_point_ = airsim_client_->getHomeGeoPoint("");
         }
-        else {
-            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_));
+        else if(airsim_mode_ == AIRSIM_MODE::WARTHOG){
+            airsim_client_warthog_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_));
+            airsim_client_warthog_->confirmConnection();
+            origin_geo_point_ = airsim_client_warthog_->getHomeGeoPoint("");
         }
-        airsim_client_->confirmConnection();
+        else if(airsim_mode_ == AIRSIM_MODE::BOTH){
+            airsim_client_warthog_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_, warthog_port_));
+            airsim_client_warthog_->confirmConnection();
+            airsim_client_drone_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
+            airsim_client_drone_->confirmConnection();
+            origin_geo_point_ = airsim_client_warthog_->getHomeGeoPoint("");
+        }
+        //airsim_client_->confirmConnection();
         airsim_client_images_.confirmConnection();
         airsim_client_lidar_.confirmConnection();
-
-        for (const auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_) {
+        for (const auto& curr_vehicle_elem : AirSimSettings::singleton().vehicles) {
+            auto& vehicle_setting = curr_vehicle_elem.second;
+            auto curr_vehicle_name = curr_vehicle_elem.first;
+            ROS_INFO("API CONTROL\n");
+            if(vehicle_setting->vehicle_type=="simpleflight"){
+                airsim_client_drone_->enableApiControl(true, curr_vehicle_name); // todo expose as rosservice?
+                airsim_client_drone_->armDisarm(true, curr_vehicle_name); // todo exposes as rosservice?
+            }
+            if(vehicle_setting->vehicle_type=="warthog"){
+                airsim_client_warthog_->enableApiControl(true, curr_vehicle_name); // todo expose as rosservice?
+                airsim_client_warthog_->armDisarm(true, curr_vehicle_name); // todo exposes as rosservice?
+            }
+            if(vehicle_setting->vehicle_type=="physxcar"){
+                ROS_INFO("enableing api for car\n");
+                airsim_client_->enableApiControl(true, curr_vehicle_name); // todo expose as rosservice?
+                airsim_client_->armDisarm(true, curr_vehicle_name); // todo exposes as rosservice?
+            }
+            //airsim_client_->enableApiControl(true, curr_vehicle_name); // todo expose as rosservice?
+            //airsim_client_->armDisarm(true, curr_vehicle_name); // todo exposes as rosservice?
+        }
+        /*for (const auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_) {
             airsim_client_->enableApiControl(true, vehicle_name_ptr_pair.first); // todo expose as rosservice?
             airsim_client_->armDisarm(true, vehicle_name_ptr_pair.first); // todo exposes as rosservice?
-        }
+        }*/
 
-        origin_geo_point_ = airsim_client_->getHomeGeoPoint("");
+       // origin_geo_point_ = airsim_client_->getHomeGeoPoint("");
         // todo there's only one global origin geopoint for environment. but airsim API accept a parameter vehicle_name? inside carsimpawnapi.cpp, there's a geopoint being assigned in the constructor. by?
         origin_geo_point_msg_ = get_gps_msg_from_airsim_geo_point(origin_geo_point_);
     }
@@ -468,8 +504,12 @@ bool AirsimROSWrapper::land_all_srv_cb(airsim_ros_pkgs::Land::Request& request, 
 bool AirsimROSWrapper::reset_srv_cb(airsim_ros_pkgs::Reset::Request& request, airsim_ros_pkgs::Reset::Response& response)
 {
     std::lock_guard<std::mutex> guard(drone_control_mutex_);
-
-    airsim_client_->reset();
+    if (airsim_client_)
+        airsim_client_->reset();
+    if (airsim_client_drone_)
+        airsim_client_drone_->reset();
+    if (airsim_client_warthog_)
+        airsim_client_warthog_->reset();
 
     response.success = true;
     return response.success; //todo
@@ -1021,7 +1061,7 @@ ros::Time AirsimROSWrapper::airsim_timestamp_to_ros(const msr::airlib::TTimePoin
 
 msr::airlib::MultirotorRpcLibClient* AirsimROSWrapper::get_multirotor_client()
 {
-    return static_cast<msr::airlib::MultirotorRpcLibClient*>(airsim_client_.get());
+    return static_cast<msr::airlib::MultirotorRpcLibClient*>(airsim_client_drone_.get());
 }
 
 msr::airlib::CarRpcLibClient* AirsimROSWrapper::get_car_client()
@@ -1030,7 +1070,7 @@ msr::airlib::CarRpcLibClient* AirsimROSWrapper::get_car_client()
 }
 msr::airlib::WarthogRpcLibClient* AirsimROSWrapper::get_warthog_client()
 {
-    return static_cast<msr::airlib::WarthogRpcLibClient*>(airsim_client_.get());
+    return static_cast<msr::airlib::WarthogRpcLibClient*>(airsim_client_warthog_.get());
 }
 
 void AirsimROSWrapper::drone_state_timer_cb(const ros::WallTimerEvent& event)
@@ -1043,9 +1083,23 @@ void AirsimROSWrapper::drone_state_timer_cb(const ros::WallTimerEvent& event)
         const auto now = update_state();
 
         // on init, will publish 0 to /clock as expected for use_sim_time compatibility
-        if (!airsim_client_->simIsPaused()) {
-            // airsim_client needs to provide the simulation time in a future version of the API
-            ros_clock_.clock = now;
+        if (airsim_client_) {
+            if (!airsim_client_->simIsPaused()) {
+                // airsim_client needs to provide the simulation time in a future version of the API
+                ros_clock_.clock = now;
+            }
+        }
+        else if (airsim_client_drone_) {
+            if (!airsim_client_drone_->simIsPaused()) {
+                // airsim_client needs to provide the simulation time in a future version of the API
+                ros_clock_.clock = now;
+            }
+        }
+        else if (airsim_client_warthog_) {
+            if (!airsim_client_warthog_->simIsPaused()) {
+                // airsim_client needs to provide the simulation time in a future version of the API
+                ros_clock_.clock = now;
+            }
         }
         // publish the simulation clock
         if (publish_clock_) {

@@ -135,7 +135,8 @@ public:
     {
         DRONE,
         CAR,
-	WARTHOG
+	WARTHOG,
+    BOTH
     };
 
     AirsimROSWrapper(const ros::NodeHandle& nh, const ros::NodeHandle& nh_private, const std::string& host_ip);
@@ -359,6 +360,8 @@ private:
     bool is_vulkan_; // rosparam obtained from launch file. If vulkan is being used, we BGR encoding instead of RGB
 
     std::unique_ptr<msr::airlib::RpcLibClientBase> airsim_client_ = nullptr;
+    std::unique_ptr<msr::airlib::RpcLibClientBase> airsim_client_drone_ = nullptr;
+    std::unique_ptr<msr::airlib::RpcLibClientBase> airsim_client_warthog_ = nullptr;
     // seperate busy connections to airsim, update in their own thread
     msr::airlib::RpcLibClientBase airsim_client_images_;
     msr::airlib::RpcLibClientBase airsim_client_lidar_;
@@ -418,4 +421,5 @@ private:
     static constexpr char R_YML_NAME[] = "rectification_matrix";
     static constexpr char P_YML_NAME[] = "projection_matrix";
     static constexpr char DMODEL_YML_NAME[] = "distortion_model";
+    uint16_t warthog_port_= 41452;
 };
