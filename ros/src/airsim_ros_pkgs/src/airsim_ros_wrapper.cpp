@@ -143,6 +143,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         nh_.setParam("/vehicle_name", curr_vehicle_name);
 
+	ROS_INFO("%s\n", vehicle_setting->vehicle_type);
+
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
         std::unique_ptr<VehicleROS> vehicle_ros = nullptr;
