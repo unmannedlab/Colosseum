@@ -17,7 +17,6 @@ bool AirSimSettingsParser::getSettingsText(std::string& settings_text) const
     airsim_client.confirmConnection();
 
     settings_text = airsim_client.getSettingsString();
-
     return !settings_text.empty();
 }
 
