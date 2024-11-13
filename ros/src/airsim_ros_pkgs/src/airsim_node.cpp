@@ -1,5 +1,5 @@
 #include "ros/ros.h"
-#include "airsim_ros_wrapper.h"
+#include "airsim_ros_wrapper_air_ground.h"
 #include <ros/spinner.h>
 
 int main(int argc, char** argv)

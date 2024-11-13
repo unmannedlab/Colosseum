@@ -1,4 +1,4 @@
-#include <airsim_ros_wrapper.h>
+#include <airsim_ros_wrapper_air_ground.h>
 #include <boost/make_shared.hpp>
 // #include <pluginlib/class_list_macros.h>
 // PLUGINLIB_EXPORT_CLASS(AirsimROSWrapper, nodelet::Nodelet)
