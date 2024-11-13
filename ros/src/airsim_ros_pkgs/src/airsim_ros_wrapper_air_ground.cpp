@@ -183,14 +183,21 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         std::unique_ptr<VehicleROS> vehicle_ros = nullptr;
 
-        if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        //if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        if (vehicle_setting->vehicle_type == "simpleflight") {
             vehicle_ros = std::unique_ptr<MultiRotorROS>(new MultiRotorROS());
+            vehicle_ros->vehicle_type = "simpleflight";
         }
-        else if (airsim_mode_ == AIRSIM_MODE::CAR){
+        //else if (airsim_mode_ == AIRSIM_MODE::CAR) {
+        else if (vehicle_setting->vehicle_type == "physxcar") {
             vehicle_ros = std::unique_ptr<CarROS>(new CarROS());
+            vehicle_ros->vehicle_type = "physxcar";
+            ROS_INFO("Setting car mode\n");
         }
-        else {
+       // else {
+        else if (vehicle_setting->vehicle_type == "warthog") {
             vehicle_ros = std::unique_ptr<WarthogROS>(new WarthogROS());
+            vehicle_ros->vehicle_type = "warthog";
         }
         vehicle_ros->odom_frame_id = curr_vehicle_name + "/" + odom_frame_id_;
         vehicle_ros->vehicle_name = curr_vehicle_name;
@@ -203,7 +210,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         vehicle_ros->global_gps_pub = nh_private_.advertise<sensor_msgs::NavSatFix>(curr_vehicle_name + "/global_gps", 10);
 
-        if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        //if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        if (vehicle_setting->vehicle_type == "simpleflight") {
             auto drone = static_cast<MultiRotorROS*>(vehicle_ros.get());
 
             // bind to a single callback. todo optimal subs queue length
@@ -229,7 +237,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
             // vehicle_ros.reset_srvr = nh_private_.advertiseService(curr_vehicle_name + "/reset",&AirsimROSWrapper::reset_srv_cb, this);
         }
-	else if (airsim_mode_ == AIRSIM_MODE::CAR){
+        //else if (airsim_mode_ == AIRSIM_MODE::CAR) {
+        else if (vehicle_setting->vehicle_type == "physxcar") {
             auto car = static_cast<CarROS*>(vehicle_ros.get());
             car->car_cmd_sub = nh_private_.subscribe<airsim_ros_pkgs::CarControls>(
                 curr_vehicle_name + "/car_cmd",
@@ -238,12 +247,13 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
             car->car_state_pub = nh_private_.advertise<airsim_ros_pkgs::CarState>(curr_vehicle_name + "/car_state", 10);
         }
-        else {
+        //else {
+        else if (vehicle_setting->vehicle_type == "warthog") {
             auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
-           // warthog->warthog_cmd_sub = nh_private_.subscribe<airsim_ros_pkgs::WarthogControls>(
+            // warthog->warthog_cmd_sub = nh_private_.subscribe<airsim_ros_pkgs::WarthogControls>(
             //    curr_vehicle_name + "/warthog_cmd",
-             //   1,
-              //  boost::bind(&AirsimROSWrapper::warthog_cmd_cb, this, _1, vehicle_ros->vehicle_name));
+            //   1,
+            //  boost::bind(&AirsimROSWrapper::warthog_cmd_cb, this, _1, vehicle_ros->vehicle_name));
             warthog->warthog_cmd_sub = nh_private_.subscribe<geometry_msgs::Twist>(
                 curr_vehicle_name + "/warthog_cmd",
                 1,
@@ -1146,9 +1156,10 @@ ros::Time AirsimROSWrapper::update_state()
         auto& vehicle_ros = vehicle_name_ptr_pair.second;
 
         // vehicle environment, we can get ambient temperature here and other truths
-        auto env_data = airsim_client_->simGetGroundTruthEnvironment(vehicle_ros->vehicle_name);
+        //auto env_data = airsim_client_->simGetGroundTruthEnvironment(vehicle_ros->vehicle_name);
 
-        if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        //if (airsim_mode_ == AIRSIM_MODE::DRONE) {
+        if (vehicle_ros->vehicle_type=="simpleflight") {
             auto drone = static_cast<MultiRotorROS*>(vehicle_ros.get());
             drone->curr_drone_state = get_multirotor_client()->getMultirotorState(vehicle_ros->vehicle_name);
 
@@ -1162,8 +1173,15 @@ ros::Time AirsimROSWrapper::update_state()
             vehicle_ros->gps_sensor_msg.header.stamp = vehicle_time;
 
             vehicle_ros->curr_odom = get_odom_msg_from_multirotor_state(drone->curr_drone_state);
+            auto env_data = airsim_client_drone_->simGetGroundTruthEnvironment(vehicle_ros->vehicle_name);
+            airsim_ros_pkgs::Environment env_msg = get_environment_msg_from_airsim(env_data);
+            env_msg.header.frame_id = vehicle_ros->vehicle_name;
+            env_msg.header.stamp = vehicle_time;
+            vehicle_ros->env_msg = env_msg;
+            
         }
-	else if(airsim_mode_ == AIRSIM_MODE::CAR){
+        //else if (airsim_mode_ == AIRSIM_MODE::CAR) {
+        else if (vehicle_ros->vehicle_type=="physxcar") {
             auto car = static_cast<CarROS*>(vehicle_ros.get());
             car->curr_car_state = get_car_client()->getCarState(vehicle_ros->vehicle_name);
 
@@ -1172,6 +1190,7 @@ ros::Time AirsimROSWrapper::update_state()
                 curr_ros_time = vehicle_time;
                 got_sim_time = true;
             }
+            auto env_data = airsim_client_->simGetGroundTruthEnvironment(vehicle_ros->vehicle_name);
 
             vehicle_ros->gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(env_data.geo_point);
             vehicle_ros->gps_sensor_msg.header.stamp = vehicle_time;
@@ -1181,8 +1200,13 @@ ros::Time AirsimROSWrapper::update_state()
             airsim_ros_pkgs::CarState state_msg = get_roscarstate_msg_from_car_state(car->curr_car_state);
             state_msg.header.frame_id = vehicle_ros->vehicle_name;
             car->car_state_msg = state_msg;
+            airsim_ros_pkgs::Environment env_msg = get_environment_msg_from_airsim(env_data);
+            env_msg.header.frame_id = vehicle_ros->vehicle_name;
+            env_msg.header.stamp = vehicle_time;
+            vehicle_ros->env_msg = env_msg;
         }
-	else {
+        //else {
+        else if (vehicle_ros->vehicle_type=="warthog") {
             auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
             warthog->curr_warthog_state = get_warthog_client()->getWarthogState(vehicle_ros->vehicle_name);
 
@@ -1192,6 +1216,7 @@ ros::Time AirsimROSWrapper::update_state()
                 got_sim_time = true;
             }
 
+            auto env_data = airsim_client_warthog_->simGetGroundTruthEnvironment(vehicle_ros->vehicle_name);
             vehicle_ros->gps_sensor_msg = get_gps_sensor_msg_from_airsim_geo_point(env_data.geo_point);
             vehicle_ros->gps_sensor_msg.header.stamp = vehicle_time;
 
@@ -1200,13 +1225,17 @@ ros::Time AirsimROSWrapper::update_state()
             airsim_ros_pkgs::WarthogState state_msg = get_roswarthogstate_msg_from_warthog_state(warthog->curr_warthog_state);
             state_msg.header.frame_id = vehicle_ros->vehicle_name;
             warthog->warthog_state_msg = state_msg;
+            airsim_ros_pkgs::Environment env_msg = get_environment_msg_from_airsim(env_data);
+            env_msg.header.frame_id = vehicle_ros->vehicle_name;
+            env_msg.header.stamp = vehicle_time;
+            vehicle_ros->env_msg = env_msg;
         }
         vehicle_ros->stamp = vehicle_time;
 
-        airsim_ros_pkgs::Environment env_msg = get_environment_msg_from_airsim(env_data);
-        env_msg.header.frame_id = vehicle_ros->vehicle_name;
-        env_msg.header.stamp = vehicle_time;
-        vehicle_ros->env_msg = env_msg;
+        //airsim_ros_pkgs::Environment env_msg = get_environment_msg_from_airsim(env_data);
+        //env_msg.header.frame_id = vehicle_ros->vehicle_name;
+        //env_msg.header.stamp = vehicle_time;
+        //vehicle_ros->env_msg = env_msg;
 
         // convert airsim drone state to ROS msgs
         vehicle_ros->curr_odom.header.frame_id = vehicle_ros->vehicle_name;
@@ -1224,13 +1253,14 @@ void AirsimROSWrapper::publish_vehicle_state()
 
         // simulation environment truth
         vehicle_ros->env_pub.publish(vehicle_ros->env_msg);
-
-        if (airsim_mode_ == AIRSIM_MODE::CAR) {
+        if(vehicle_ros->vehicle_type=="physxcar"){
+        //if (airsim_mode_ == AIRSIM_MODE::CAR) {
             // dashboard reading from car, RPM, gear, etc
             auto car = static_cast<CarROS*>(vehicle_ros.get());
             car->car_state_pub.publish(car->car_state_msg);
         }
-	if (airsim_mode_ == AIRSIM_MODE::WARTHOG) {
+        if(vehicle_ros->vehicle_type=="warthog"){
+	//if (airsim_mode_ == AIRSIM_MODE::WARTHOG) {
             // dashboard reading from car, RPM, gear, etc
             auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
             warthog->warthog_state_pub.publish(warthog->warthog_state_msg);

@@ -183,6 +183,7 @@ private:
         ros::Time stamp;
 
         std::string odom_frame_id;
+        std::string vehicle_type;
         /// Status
         // bool is_armed_;
         // std::string mode_;
