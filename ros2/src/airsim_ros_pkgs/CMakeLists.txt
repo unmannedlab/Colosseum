@@ -59,6 +59,7 @@ ament_target_dependencies(pd_position_controller_simple
   nav_msgs
   geometry_msgs
   airsim_interfaces
+  tf2_geometry_msgs
 )
 
 add_library(airsim_ros src/airsim_ros_wrapper.cpp)
@@ -69,9 +70,13 @@ ament_target_dependencies(airsim_ros
   geometry_msgs
   nav_msgs
   image_transport
+  mavros_msgs
   tf2_ros
   cv_bridge
+  std_srvs
   airsim_interfaces
+  tf2_geometry_msgs
+  tf2_sensor_msgs
 )
 
 add_executable(airsim_node src/airsim_node.cpp)
