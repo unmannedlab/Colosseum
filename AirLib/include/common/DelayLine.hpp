@@ -52,12 +52,19 @@ namespace airlib
 
             if (!times_.empty() &&
                 ClockBase::elapsedBetween(clock()->nowNanos(), times_.front()) >= delay_) {
+                if (!values_.empty()) {
+                    last_value_ = values_.front();
+                    values_.pop_front();
+                }
+                if (!times_.empty()) {
+                    last_time_ = times_.front();
+                    times_.pop_front();
+                }
+                //last_value_ = values_.front();
+               // last_time_ = times_.front();
 
-                last_value_ = values_.front();
-                last_time_ = times_.front();
-
-                times_.pop_front();
-                values_.pop_front();
+               // times_.pop_front();
+               // values_.pop_front();
             }
         }
         //*** End: UpdatableState implementation ***//

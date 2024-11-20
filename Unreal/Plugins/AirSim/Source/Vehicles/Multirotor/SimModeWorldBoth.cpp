@@ -86,16 +86,20 @@ std::vector<std::unique_ptr<msr::airlib::ApiServerBase>> ASimModeWorldBoth::crea
     return api_servers;
 #else
     uint16_t port_drone = 41451;
-    api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::MultirotorRpcLibServer(
-        getApiProvider(), getSettings().api_server_address, port_drone)));
+    //api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::MultirotorRpcLibServer(
+       // getApiProvider(), getSettings().api_server_address, port_drone)));
+    api_servers.push_back(std::make_unique<msr::airlib::MultirotorRpcLibServer>(
+        getApiProvider(), getSettings().api_server_address, port_drone));
 
     uint16_t port_car = 41452;
     //api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::CarRpcLibServer(
      //   getApiProvider(), getSettings().api_server_address, port_car)));
    // return api_servers;
 
-    api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::WarthogRpcLibServer(
-        getApiProvider(), getSettings().api_server_address, port_car)));
+    //api_servers.push_back(std::unique_ptr<msr::airlib::ApiServerBase>(new msr::airlib::WarthogRpcLibServer(
+        //getApiProvider(), getSettings().api_server_address, port_car)));
+    api_servers.push_back(std::make_unique<msr::airlib::WarthogRpcLibServer>(
+        getApiProvider(), getSettings().api_server_address, port_car));
     return api_servers;
 #endif
 }
@@ -204,7 +208,7 @@ std::unique_ptr<PawnSimApi> ASimModeWorldBoth::createVehicleSimApi(
         auto vehicle_pawn = static_cast<TWarthogPawn*>(pawn_sim_api_params.pawn);
         auto vehicle_sim_api = std::unique_ptr<PawnSimApi>(new WarthogPawnSimApi(pawn_sim_api_params, vehicle_pawn->getKeyBoardControls()));
         vehicle_sim_api->initialize();
-        // vehicle_sim_api->reset();
+       // vehicle_sim_api->reset();
         return vehicle_sim_api;
     }
     else {

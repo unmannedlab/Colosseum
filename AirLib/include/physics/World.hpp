@@ -46,10 +46,12 @@ namespace airlib
 
             //first update our objects
             UpdatableContainer::update();
-
+            //UE_LOG(LogTemp, Warning, TEXT("Before Hello World"));
             //now update kinematics state
-            if (physics_engine_)
+            if (physics_engine_) {
+               // UE_LOG(LogTemp, Warning, TEXT("Hello World"));
                 physics_engine_->update();
+            }
         }
 
         virtual void reportState(StateReporter& reporter) override

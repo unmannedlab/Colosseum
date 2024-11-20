@@ -799,7 +799,7 @@ namespace airlib
             connection_info.baud_rate = settings_json.getInt("SerialBaudRate", connection_info.baud_rate);
             connection_info.model = settings_json.getString("Model", connection_info.model);
             connection_info.logs = settings_json.getString("Logs", connection_info.logs);
-            
+
             Settings params;
             if (settings_json.getChild("Parameters", params)) {
                 std::vector<std::string> keys;
@@ -1400,7 +1400,7 @@ namespace airlib
         {
             if (simmode_name == kSimModeTypeMultirotor || simmode_name == kSimModeTypeBoth) {
                 sensors["imu"] = createSensorSetting(SensorBase::SensorType::Imu, "imu", true);
-                sensors["magnetometer"] = createSensorSetting(SensorBase::SensorType::Magnetometer, "magnetometer", true);
+               // sensors["magnetometer"] = createSensorSetting(SensorBase::SensorType::Magnetometer, "magnetometer", true);
                 sensors["gps"] = createSensorSetting(SensorBase::SensorType::Gps, "gps", true);
                 sensors["barometer"] = createSensorSetting(SensorBase::SensorType::Barometer, "barometer", true);
             }
