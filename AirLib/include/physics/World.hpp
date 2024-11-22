@@ -45,12 +45,16 @@ namespace airlib
             ClockFactory::get()->step();
 
             //first update our objects
+          //  UE_LOG(LogTemp, Warning, TEXT("In world.hpp getting before updatable object"))
             UpdatableContainer::update();
-            //UE_LOG(LogTemp, Warning, TEXT("Before Hello World"));
+          //  UE_LOG(LogTemp, Warning, TEXT("In world.hpp getting after updatable object"))
+          //  UE_LOG(LogTemp, Warning, TEXT("In World.hpp Before Hello World"));
             //now update kinematics state
             if (physics_engine_) {
                // UE_LOG(LogTemp, Warning, TEXT("Hello World"));
+              //  UE_LOG(LogTemp, Warning, TEXT("In world.hpp getting before physics update"))
                 physics_engine_->update();
+              //  UE_LOG(LogTemp, Warning, TEXT("In world.hpp getting after physics update"))
             }
         }
 

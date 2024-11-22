@@ -39,7 +39,8 @@ namespace airlib
 
         //*** Start: UpdatableState implementation ***//
         virtual void resetImplementation() override
-        {
+        { 
+            UE_LOG(LogTemp, Warning, TEXT("In DelayLine.hpp resetting Sensors"))
             values_.clear();
             times_.clear();
             last_time_ = 0;
@@ -49,22 +50,23 @@ namespace airlib
         virtual void update() override
         {
             UpdatableObject::update();
-
-            if (!times_.empty() &&
+            //return;
+           // UE_LOG(LogTemp, Warning, TEXT("In delayLine.hpp updating something here"))
+             if (!times_.empty() &&
                 ClockBase::elapsedBetween(clock()->nowNanos(), times_.front()) >= delay_) {
-                if (!values_.empty()) {
+                /* if (!values_.empty()) {
                     last_value_ = values_.front();
                     values_.pop_front();
                 }
                 if (!times_.empty()) {
                     last_time_ = times_.front();
                     times_.pop_front();
-                }
-                //last_value_ = values_.front();
-               // last_time_ = times_.front();
+                }*/
+             last_value_ = values_.front();
+             last_time_ = times_.front();
 
-               // times_.pop_front();
-               // values_.pop_front();
+             times_.pop_front();
+             values_.pop_front();
             }
         }
         //*** End: UpdatableState implementation ***//
@@ -80,6 +82,7 @@ namespace airlib
 
         void push_back(const T& val, TTimePoint time_offset = 0)
         {
+            //return;
             values_.push_back(val);
             times_.push_back(clock()->nowNanos() + time_offset);
         }

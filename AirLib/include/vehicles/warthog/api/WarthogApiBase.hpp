@@ -87,6 +87,7 @@ namespace airlib
 
         SensorCollection& getSensors()
         {
+           // UE_LOG(LogTemp, Warning, TEXT("In WarthogApiBase getting Sensors"));
             return sensors_;
         }
         virtual void enableApiControl(bool is_enabled) override

@@ -83,6 +83,7 @@ namespace airlib
         }
         SensorCollection& getSensors()
         {
+           // UE_LOG(LogTemp, Warning, TEXT("In MultiRotorParams.hpp getting Sensors"));
             return sensors_;
         }
         const SensorCollection& getSensors() const
