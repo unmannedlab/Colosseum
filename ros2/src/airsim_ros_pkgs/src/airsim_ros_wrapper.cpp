@@ -75,7 +75,7 @@ void AirsimROSWrapper::initialize_airsim()
 
         for (const auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_) {
             airsim_client_->enableApiControl(true, vehicle_name_ptr_pair.first); // todo expose as rosservice?
-            airsim_client_->armDisarm(true, vehicle_name_ptr_pair.first); // todo exposes as rosservice?
+           // airsim_client_->armDisarm(true, vehicle_name_ptr_pair.first); // todo exposes as rosservice?
         }
 
         origin_geo_point_ = get_origin_geo_point();
@@ -102,7 +102,7 @@ void AirsimROSWrapper::initialize_ros()
     nh_->get_parameter_or("odom_frame_id", odom_frame_id_, odom_frame_id_);
     isENU_ = (odom_frame_id_ == ENU_ODOM_FRAME_ID);
     nh_->get_parameter_or("coordinate_system_enu", isENU_, isENU_);
-    vel_cmd_duration_ = 0.05; // todo rosparam
+    vel_cmd_duration_ = 0.02; // todo rosparam
     // todo enforce dynamics constraints in this node as well?
     // nh_->get_parameter("max_vert_vel_", max_vert_vel_);
     // nh_->get_parameter("max_horz_vel", max_horz_vel_)
@@ -303,7 +303,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     reset_srvr_ = nh_->create_service<airsim_interfaces::srv::Reset>("~/reset", std::bind(&AirsimROSWrapper::reset_srv_cb, this, _1, _2));
 
     if (publish_clock_) {
-        clock_pub_ = nh_->create_publisher<rosgraph_msgs::msg::Clock>("~/clock", 1);
+        clock_pub_ = nh_->create_publisher<rosgraph_msgs::msg::Clock>("/clock", 1);
     }
 
     // if >0 cameras, add one more thread for img_request_timer_cb
@@ -815,7 +815,7 @@ void AirsimROSWrapper::publish_odom_tf(const nav_msgs::msg::Odometry& odom_msg)
     odom_tf.transform.translation.y = odom_msg.pose.pose.position.y;
     odom_tf.transform.translation.z = odom_msg.pose.pose.position.z;
     odom_tf.transform.rotation = odom_msg.pose.pose.orientation;
-    tf_broadcaster_->sendTransform(odom_tf);
+    //tf_broadcaster_->sendTransform(odom_tf);
 }
 
 airsim_interfaces::msg::GPSYaw AirsimROSWrapper::get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const
@@ -938,7 +938,7 @@ void AirsimROSWrapper::update_and_publish_static_transforms(VehicleROS* vehicle_
     if (vehicle_ros && !vehicle_ros->static_tf_msg_vec_.empty()) {
         for (auto& static_tf_msg : vehicle_ros->static_tf_msg_vec_) {
             static_tf_msg.header.stamp = vehicle_ros->stamp_;
-            static_tf_pub_->sendTransform(static_tf_msg);
+           // static_tf_pub_->sendTransform(static_tf_msg);
         }
     }
 }

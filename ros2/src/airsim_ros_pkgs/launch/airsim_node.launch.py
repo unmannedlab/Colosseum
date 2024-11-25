@@ -17,7 +17,7 @@ def generate_launch_description():
 
     publish_clock = DeclareLaunchArgument(
         "publish_clock",
-        default_value='False')
+        default_value='True')
 
     is_vulkan = DeclareLaunchArgument(
         "is_vulkan",
@@ -35,7 +35,7 @@ def generate_launch_description():
             parameters=[{
                 'is_vulkan': False,
                 'update_airsim_img_response_every_n_sec': 0.05,
-                'update_airsim_control_every_n_sec': 0.01,
+                'update_airsim_control_every_n_sec': 0.001,
                 'update_lidar_every_n_sec': 0.01,
                 'publish_clock': LaunchConfiguration('publish_clock'),
                 'host_ip': LaunchConfiguration('host')
