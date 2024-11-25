@@ -40,7 +40,7 @@ namespace airlib
         //*** Start: UpdatableState implementation ***//
         virtual void resetImplementation() override
         { 
-            UE_LOG(LogTemp, Warning, TEXT("In DelayLine.hpp resetting Sensors"))
+           // UE_LOG(LogTemp, Warning, TEXT("In DelayLine.hpp resetting Sensors"))
             values_.clear();
             times_.clear();
             last_time_ = 0;
