@@ -56,13 +56,13 @@ namespace airlib
             epv_filter.update();
 
             if (freq_limiter_.isWaitComplete()) { //update output
-                addOutputToDelayLine(eph_filter.getOutput(), epv_filter.getOutput());
+               setOutput(addOutputToDelayLine(eph_filter.getOutput(), epv_filter.getOutput()));
             }
 
-            delay_line_.update();
+          //  delay_line_.update();
 
-            if (freq_limiter_.isWaitComplete())
-                setOutput(delay_line_.getOutput());
+          //  if (freq_limiter_.isWaitComplete())
+              //  setOutput(delay_line_.getOutput());
         }
 
         //*** End: UpdatableState implementation ***//
@@ -70,7 +70,7 @@ namespace airlib
         virtual ~GpsSimple() = default;
 
     private:
-        void addOutputToDelayLine(real_T eph, real_T epv)
+        Output addOutputToDelayLine(real_T eph, real_T epv)
         {
             Output output;
             const GroundTruth& ground_truth = getGroundTruth();
@@ -90,7 +90,8 @@ namespace airlib
 
             output.time_stamp = clock()->nowNanos();
 
-            delay_line_.push_back(output);
+          //  delay_line_.push_back(output);
+            return output;
         }
 
     private:

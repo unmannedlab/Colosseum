@@ -4,7 +4,9 @@
 #include "Misc/FileHelper.h"
 
 #include "Vehicles/Multirotor/SimModeWorldMultiRotor.h"
+#include "Vehicles/Multirotor/SimModeWorldBoth.h"
 #include "Vehicles/Car/SimModeCar.h"
+#include "Vehicles/Warthog/SimModeWarthog.h"
 #include "Vehicles/ComputerVision/SimModeComputerVision.h"
 
 #include "common/AirSimSettings.hpp"
@@ -279,6 +281,15 @@ void ASimHUD::createSimMode()
         simmode_ = this->GetWorld()->SpawnActor<ASimModeComputerVision>(FVector::ZeroVector,
                                                                         FRotator::ZeroRotator,
                                                                         simmode_spawn_params);
+    else if (simmode_name == AirSimSettings::kSimModeTypeWarthog)
+        simmode_ = this->GetWorld()->SpawnActor<ASimModeWarthog>(FVector::ZeroVector,
+                                                                 	FRotator::ZeroRotator,
+                                                                 	simmode_spawn_params);
+    else if (simmode_name == "Both")
+        simmode_ = this->GetWorld()->SpawnActor<ASimModeWorldBoth>(FVector::ZeroVector,
+                                                                   FRotator::ZeroRotator,
+                                                                   simmode_spawn_params);
+
     else {
         UAirBlueprintLib::ShowMessage(EAppMsgType::Ok, std::string("SimMode is not valid: ") + simmode_name, "Error");
         UAirBlueprintLib::LogMessageString("SimMode is not valid: ", simmode_name, LogDebugLevel::Failure);
