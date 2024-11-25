@@ -84,6 +84,7 @@ namespace airlib
             UpdatableObject::update();
 
             for (auto& pair : sensors_) {
+             //   UE_LOG(LogTemp, Warning, TEXT("In SensorCollection Updating Sensor %u"), pair.first);
                 pair.second->update();
             }
         }
