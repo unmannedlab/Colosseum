@@ -104,7 +104,7 @@ ament_target_dependencies(airsim_node
 
 add_executable(airsim_node_warthog src/airsim_node_warthog.cpp)
 target_link_libraries(airsim_node_warthog airsim_ros_warthog AirLib)
-ament_target_dependencies(airsim_node 
+ament_target_dependencies(airsim_node_warthog 
   rclcpp
 )
 
@@ -122,10 +122,10 @@ ament_target_dependencies(pd_position_controller_simple_node
 # rosidl_target_interfaces(pd_position_controller_simple_node
 #   ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
-install(TARGETS airsim_node pd_position_controller_simple_node
+install(TARGETS airsim_node airsim_node_warthog pd_position_controller_simple_node
   DESTINATION lib/${PROJECT_NAME})
 
-install(TARGETS airsim_ros pd_position_controller_simple
+install(TARGETS airsim_ros airsim_node_warthog pd_position_controller_simple
   ARCHIVE
   DESTINATION lib
   LIBRARY

@@ -40,13 +40,17 @@ AirsimROSWrapper::AirsimROSWrapper(const std::shared_ptr<rclcpp::Node> nh, const
 {
     ros_clock_.clock = rclcpp::Time(0);
 
-    if (AirSimSettings::singleton().simmode_name != AirSimSettings::kSimModeTypeCar) {
+    if (AirSimSettings::singleton().simmode_name != AirSimSettings::kSimModeTypeBoth) {
         airsim_mode_ = AIRSIM_MODE::DRONE;
         RCLCPP_INFO(nh_->get_logger(), "Setting ROS wrapper to DRONE mode");
     }
-    else {
+    /*else if{
         airsim_mode_ = AIRSIM_MODE::CAR;
         RCLCPP_INFO(nh_->get_logger(), "Setting ROS wrapper to CAR mode");
+    }*/
+    else{
+        airsim_mode_ = AIRSIM_MODE::BOTH;
+        RCLCPP_INFO(nh_->get_logger(), "Setting ROS wrapper to airground mode");
     }
     tf_buffer_ = std::make_shared<tf2_ros::Buffer>(nh_->get_clock());
     tf_listener_ = std::make_shared<tf2_ros::TransformListener>(*tf_buffer_);
@@ -67,7 +71,7 @@ void AirsimROSWrapper::initialize_airsim()
             airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::MultirotorRpcLibClient(host_ip_));
         }
         else {
-            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::CarRpcLibClient(host_ip_));
+            airsim_client_ = std::unique_ptr<msr::airlib::RpcLibClientBase>(new msr::airlib::WarthogRpcLibClient(host_ip_, warthog_port_));
         }
         airsim_client_->confirmConnection();
         airsim_client_images_.confirmConnection();
@@ -130,11 +134,15 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     image_transport::ImageTransport image_transporter(nh_);
 
     // iterate over std::map<std::string, std::unique_ptr<VehicleSetting>> vehicles;
-   /* for (const auto& curr_vehicle_elem : AirSimSettings::singleton().vehicles) {
+    for (const auto& curr_vehicle_elem : AirSimSettings::singleton().vehicles) {
         auto& vehicle_setting = curr_vehicle_elem.second;
         auto curr_vehicle_name = curr_vehicle_elem.first;
 
         nh_->set_parameter(rclcpp::Parameter("vehicle_name", curr_vehicle_name));
+        std::cout<<"current vehicle name "<<vehicle_setting->vehicle_type<<std::endl;
+        if(vehicle_setting->vehicle_type == "px4multirotor"){
+            continue;
+        }
 
         set_nans_to_zeros_in_pose(*vehicle_setting);
 
@@ -144,7 +152,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             vehicle_ros = std::unique_ptr<MultiRotorROS>(new MultiRotorROS());
         }
         else {
-            vehicle_ros = std::unique_ptr<CarROS>(new CarROS());
+            //vehicle_ros = std::unique_ptr<CarROS>(new CarROS());
+            vehicle_ros = std::unique_ptr<WarthogROS>(new WarthogROS());
         }
 
         vehicle_ros->odom_frame_id_ = curr_vehicle_name + "/" + odom_frame_id_;
@@ -180,10 +189,14 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             // vehicle_ros.reset_srvr = nh_->create_service(curr_vehicle_name + "/reset",&AirsimROSWrapper::reset_srv_cb, this);
         }
         else {
-            auto car = static_cast<CarROS*>(vehicle_ros.get());
+            /*auto car = static_cast<CarROS*>(vehicle_ros.get());
             std::function<void(const airsim_interfaces::msg::CarControls::SharedPtr)> fcn_car_cmd_sub = std::bind(&AirsimROSWrapper::car_cmd_cb, this, _1, vehicle_ros->vehicle_name_);
             car->car_cmd_sub_ = nh_->create_subscription<airsim_interfaces::msg::CarControls>(topic_prefix + "/car_cmd", 1, fcn_car_cmd_sub);
-            car->car_state_pub_ = nh_->create_publisher<airsim_interfaces::msg::CarState>(topic_prefix + "/car_state", 10);
+            car->car_state_pub_ = nh_->create_publisher<airsim_interfaces::msg::CarState>(topic_prefix + "/car_state", 10);*/
+            auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
+            std::function<void(const airsim_interfaces::msg::WarthogControls::SharedPtr)> fcn_warthog_cmd_sub = std::bind(&AirsimROSWrapper::warthog_cmd_cb, this, _1, vehicle_ros->vehicle_name_);
+            warthog->warthog_cmd_sub_ = nh_->create_subscription<airsim_interfaces::msg::WarthogControls>(topic_prefix + "/warthog_cmd", 1, fcn_warthog_cmd_sub);
+            warthog->warthog_state_pub_ = nh_->create_publisher<airsim_interfaces::msg::WarthogState>(topic_prefix + "/warthog_state", 10);
         }
 
         // iterate over camera map std::map<std::string, CameraSetting> .cameras;
@@ -282,7 +295,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
         }
 
         vehicle_name_ptr_map_.emplace(curr_vehicle_name, std::move(vehicle_ros)); // allows fast lookup in command callbacks in case of a lot of drones
-    }*/
+    }
 
     // add takeoff and land all services if more than 2 drones
     if (vehicle_name_ptr_map_.size() > 1 && airsim_mode_ == AIRSIM_MODE::DRONE) {
@@ -478,7 +491,24 @@ void AirsimROSWrapper::car_cmd_cb(const airsim_interfaces::msg::CarControls::Sha
 
     car->has_car_cmd_ = true;
 }
+void AirsimROSWrapper::warthog_cmd_cb(const airsim_interfaces::msg::WarthogControls::SharedPtr msg, const std::string& vehicle_name)
+{
+    std::lock_guard<std::mutex> guard(control_mutex_);
 
+    auto warthog = static_cast<WarthogROS*>(vehicle_name_ptr_map_[vehicle_name].get());
+    warthog->warthog_cmd_.linear_vel = msg->linear_vel;
+    warthog->warthog_cmd_.angular_vel = msg->angular_vel;
+    warthog->has_warthog_cmd_ = true;
+    /*car->car_cmd_.throttle = msg->throttle;
+    car->car_cmd_.steering = msg->steering;
+    car->car_cmd_.brake = msg->brake;
+    car->car_cmd_.handbrake = msg->handbrake;
+    car->car_cmd_.is_manual_gear = msg->manual;
+    car->car_cmd_.manual_gear = msg->manual_gear;
+    car->car_cmd_.gear_immediate = msg->gear_immediate; */
+
+    warthog->has_warthog_cmd_ = true;
+}
 msr::airlib::Pose AirsimROSWrapper::get_airlib_pose(const float& x, const float& y, const float& z, const msr::airlib::Quaternionr& airlib_quat) const
 {
     return msr::airlib::Pose(msr::airlib::Vector3r(x, y, z), airlib_quat);
@@ -602,7 +632,25 @@ airsim_interfaces::msg::CarState AirsimROSWrapper::get_roscarstate_msg_from_car_
 
     return state_msg;
 }
+airsim_interfaces::msg::WarthogState AirsimROSWrapper::get_roswarthogstate_msg_from_warthog_state(const msr::airlib::WarthogApiBase::WarthogState& warthog_state) const
+{
+    airsim_interfaces::msg::WarthogState state_msg;
+    const auto odo = get_odom_msg_from_warthog_state(warthog_state);
+    state_msg.pose = odo.pose;
+    state_msg.twist = odo.twist;
+    state_msg.header.stamp = rclcpp::Time(warthog_state.timestamp);
 
+    /*state_msg.pose = odo.pose;
+    state_msg.twist = odo.twist;
+    state_msg.speed = car_state.speed;
+    state_msg.gear = car_state.gear;
+    state_msg.rpm = car_state.rpm;
+    state_msg.maxrpm = car_state.maxrpm;
+    state_msg.handbrake = car_state.handbrake;
+    state_msg.header.stamp = rclcpp::Time(car_state.timestamp);*/
+
+    return state_msg;
+}
 nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_kinematic_state(const msr::airlib::Kinematics::State& kinematics_estimated) const
 {
     nav_msgs::msg::Odometry odom_msg;
@@ -639,6 +687,10 @@ nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_kinematic_state(cons
 nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_car_state(const msr::airlib::CarApiBase::CarState& car_state) const
 {
     return get_odom_msg_from_kinematic_state(car_state.kinematics_estimated);
+}
+nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_warthog_state(const msr::airlib::WarthogApiBase::WarthogState& warthog_state) const
+{
+    return get_odom_msg_from_kinematic_state(warthog_state.kinematics_estimated);
 }
 
 nav_msgs::msg::Odometry AirsimROSWrapper::get_odom_msg_from_multirotor_state(const msr::airlib::MultirotorState& drone_state) const
@@ -922,10 +974,10 @@ void AirsimROSWrapper::drone_state_timer_cb()
         }
 
         // publish vehicle state, odom, and all basic sensor types
-	// publish_vehicle_state();
+	    publish_vehicle_state();
 
         // send any commands out to the vehicles
-        //update_commands();
+        update_commands();
     }
     catch (rpc::rpc_error& e) {
         std::string msg = e.get_error().as<std::string>();
@@ -978,7 +1030,7 @@ rclcpp::Time AirsimROSWrapper::update_state()
             vehicle_ros->curr_odom_ = get_odom_msg_from_multirotor_state(drone->curr_drone_state_);
         }
         else {
-            auto car = static_cast<CarROS*>(vehicle_ros.get());
+            /*auto car = static_cast<CarROS*>(vehicle_ros.get());
             auto rpc = static_cast<msr::airlib::CarRpcLibClient*>(airsim_client_.get());
             car->curr_car_state_ = rpc->getCarState(vehicle_ros->vehicle_name_);
 
@@ -995,7 +1047,25 @@ rclcpp::Time AirsimROSWrapper::update_state()
 
             airsim_interfaces::msg::CarState state_msg = get_roscarstate_msg_from_car_state(car->curr_car_state_);
             state_msg.header.frame_id = vehicle_ros->vehicle_name_;
-            car->car_state_msg_ = state_msg;
+            car->car_state_msg_ = state_msg;*/
+            auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
+            auto rpc = static_cast<msr::airlib::WarthogRpcLibClient*>(airsim_client_.get());
+            warthog->curr_warthog_state_ = rpc->getWarthogState(vehicle_ros->vehicle_name_);
+            vehicle_time = rclcpp::Time(warthog->curr_warthog_state_.timestamp);
+            if (!got_sim_time) {
+                curr_ros_time = vehicle_time;
+                got_sim_time = true;
+            }
+
+            vehicle_ros->gps_sensor_msg_ = get_gps_sensor_msg_from_airsim_geo_point(env_data.geo_point);
+            vehicle_ros->gps_sensor_msg_.header.stamp = vehicle_time;
+
+            vehicle_ros->curr_odom_ = get_odom_msg_from_warthog_state(warthog->curr_warthog_state_);
+
+            airsim_interfaces::msg::WarthogState state_msg = get_roswarthogstate_msg_from_warthog_state(warthog->curr_warthog_state_);
+            state_msg.header.frame_id = vehicle_ros->vehicle_name_;
+            warthog->warthog_state_msg_ = state_msg;
+
         }
 
         vehicle_ros->stamp_ = vehicle_time;
@@ -1016,9 +1086,11 @@ rclcpp::Time AirsimROSWrapper::update_state()
 
 void AirsimROSWrapper::publish_vehicle_state()
 {
+    //std::cout<<"should publish inside function"<<std::endl;
     for (auto& vehicle_name_ptr_pair : vehicle_name_ptr_map_) {
         auto& vehicle_ros = vehicle_name_ptr_pair.second;
 
+     //   std::cout<<"should publish inside for"<<std::endl;
         // simulation environment truth
         vehicle_ros->env_pub_->publish(vehicle_ros->env_msg_);
 
@@ -1026,6 +1098,12 @@ void AirsimROSWrapper::publish_vehicle_state()
             // dashboard reading from car, RPM, gear, etc
             auto car = static_cast<CarROS*>(vehicle_ros.get());
             car->car_state_pub_->publish(car->car_state_msg_);
+        }
+        if (airsim_mode_ == AIRSIM_MODE::BOTH) {
+       //     std::cout<<"should publish"<<std::endl;
+            // dashboard reading from car, RPM, gear, etc
+            auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
+            warthog->warthog_state_pub_->publish(warthog->warthog_state_msg_);
         }
 
         // odom and transforms
@@ -1085,6 +1163,15 @@ void AirsimROSWrapper::update_commands()
                 static_cast<msr::airlib::MultirotorRpcLibClient*>(airsim_client_.get())->moveByVelocityAsync(drone->vel_cmd_.x, drone->vel_cmd_.y, drone->vel_cmd_.z, vel_cmd_duration_, msr::airlib::DrivetrainType::MaxDegreeOfFreedom, drone->vel_cmd_.yaw_mode, drone->vehicle_name_);
             }
             drone->has_vel_cmd_ = false;
+        }
+        else if (airsim_mode_ == AIRSIM_MODE::BOTH){
+            // send control commands from the last callback to airsim
+            auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
+            if (warthog->has_warthog_cmd_) {
+                std::lock_guard<std::mutex> guard(control_mutex_);
+                static_cast<msr::airlib::WarthogRpcLibClient*>(airsim_client_.get())->setWarthogControls(warthog->warthog_cmd_, vehicle_ros->vehicle_name_);
+            }
+            warthog->has_warthog_cmd_ = false;
         }
         else {
             // send control commands from the last callback to airsim

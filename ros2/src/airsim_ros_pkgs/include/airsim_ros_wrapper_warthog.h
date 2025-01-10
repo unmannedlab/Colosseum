@@ -180,16 +180,16 @@ private:
     class WarthogROS : public VehicleROS
     {
     public:
-        msr::airlib::WarthogApiBase::WarthogState curr_warthog_state;
+        msr::airlib::WarthogApiBase::WarthogState curr_warthog_state_;
 
         //ros::Subscriber warthog_cmd_sub;
         //ros::Publisher warthog_state_pub;
         rclcpp::Subscription<airsim_interfaces::msg::WarthogControls>::SharedPtr warthog_cmd_sub_;
         rclcpp::Publisher<airsim_interfaces::msg::WarthogState>::SharedPtr warthog_state_pub_;
-        airsim_interfaces::msg::WarthogState warthog_state_msg;
+        airsim_interfaces::msg::WarthogState warthog_state_msg_;
 
-        bool has_warthog_cmd;
-        msr::airlib::WarthogApiBase::WarthogControls warthog_cmd;
+        bool has_warthog_cmd_;
+        msr::airlib::WarthogApiBase::WarthogControls warthog_cmd_;
     };
 
     class MultiRotorROS : public VehicleROS
@@ -229,6 +229,7 @@ private:
 
     // commands
     void car_cmd_cb(const airsim_interfaces::msg::CarControls::SharedPtr msg, const std::string& vehicle_name);
+    void warthog_cmd_cb(const airsim_interfaces::msg::WarthogControls::SharedPtr msg, const std::string& vehicle_name);
     void update_commands();
 
     // state, returns the simulation timestamp best guess based on drone state timestamp, airsim needs to return timestap for environment
@@ -275,7 +276,9 @@ private:
     nav_msgs::msg::Odometry get_odom_msg_from_kinematic_state(const msr::airlib::Kinematics::State& kinematics_estimated) const;
     nav_msgs::msg::Odometry get_odom_msg_from_multirotor_state(const msr::airlib::MultirotorState& drone_state) const;
     nav_msgs::msg::Odometry get_odom_msg_from_car_state(const msr::airlib::CarApiBase::CarState& car_state) const;
+    nav_msgs::msg::Odometry get_odom_msg_from_warthog_state(const msr::airlib::WarthogApiBase::WarthogState& warthog_state) const;
     airsim_interfaces::msg::CarState get_roscarstate_msg_from_car_state(const msr::airlib::CarApiBase::CarState& car_state) const;
+    airsim_interfaces::msg::WarthogState get_roswarthogstate_msg_from_warthog_state(const msr::airlib::WarthogApiBase::WarthogState& warthog_state) const;
     msr::airlib::Pose get_airlib_pose(const float& x, const float& y, const float& z, const msr::airlib::Quaternionr& airlib_quat) const;
     airsim_interfaces::msg::GPSYaw get_gps_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
     sensor_msgs::msg::NavSatFix get_gps_sensor_msg_from_airsim_geo_point(const msr::airlib::GeoPoint& geo_point) const;
@@ -394,4 +397,5 @@ private:
     static constexpr char R_YML_NAME[] = "rectification_matrix";
     static constexpr char P_YML_NAME[] = "projection_matrix";
     static constexpr char DMODEL_YML_NAME[] = "distortion_model";
+    uint16_t warthog_port_= 41452;
 };
