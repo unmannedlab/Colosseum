@@ -194,8 +194,8 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
             car->car_cmd_sub_ = nh_->create_subscription<airsim_interfaces::msg::CarControls>(topic_prefix + "/car_cmd", 1, fcn_car_cmd_sub);
             car->car_state_pub_ = nh_->create_publisher<airsim_interfaces::msg::CarState>(topic_prefix + "/car_state", 10);*/
             auto warthog = static_cast<WarthogROS*>(vehicle_ros.get());
-            std::function<void(const airsim_interfaces::msg::WarthogControls::SharedPtr)> fcn_warthog_cmd_sub = std::bind(&AirsimROSWrapper::warthog_cmd_cb, this, _1, vehicle_ros->vehicle_name_);
-            warthog->warthog_cmd_sub_ = nh_->create_subscription<airsim_interfaces::msg::WarthogControls>(topic_prefix + "/warthog_cmd", 1, fcn_warthog_cmd_sub);
+            std::function<void(const geometry_msgs::msg::Twist::SharedPtr)> fcn_warthog_cmd_sub = std::bind(&AirsimROSWrapper::warthog_cmd_cb, this, _1, vehicle_ros->vehicle_name_);
+            warthog->warthog_cmd_sub_ = nh_->create_subscription<geometry_msgs::msg::Twist>(topic_prefix + "/warthog_cmd", 1, fcn_warthog_cmd_sub);
             warthog->warthog_state_pub_ = nh_->create_publisher<airsim_interfaces::msg::WarthogState>(topic_prefix + "/warthog_state", 10);
         }
 
@@ -491,13 +491,13 @@ void AirsimROSWrapper::car_cmd_cb(const airsim_interfaces::msg::CarControls::Sha
 
     car->has_car_cmd_ = true;
 }
-void AirsimROSWrapper::warthog_cmd_cb(const airsim_interfaces::msg::WarthogControls::SharedPtr msg, const std::string& vehicle_name)
+void AirsimROSWrapper::warthog_cmd_cb(const geometry_msgs::msg::Twist::SharedPtr msg, const std::string& vehicle_name)
 {
     std::lock_guard<std::mutex> guard(control_mutex_);
 
     auto warthog = static_cast<WarthogROS*>(vehicle_name_ptr_map_[vehicle_name].get());
-    warthog->warthog_cmd_.linear_vel = msg->linear_vel;
-    warthog->warthog_cmd_.angular_vel = msg->angular_vel;
+    warthog->warthog_cmd_.linear_vel = msg->linear.x;
+    warthog->warthog_cmd_.angular_vel = msg->angular.z;
     warthog->has_warthog_cmd_ = true;
     /*car->car_cmd_.throttle = msg->throttle;
     car->car_cmd_.steering = msg->steering;

@@ -184,7 +184,7 @@ private:
 
         //ros::Subscriber warthog_cmd_sub;
         //ros::Publisher warthog_state_pub;
-        rclcpp::Subscription<airsim_interfaces::msg::WarthogControls>::SharedPtr warthog_cmd_sub_;
+        rclcpp::Subscription<geometry_msgs::msg::Twist>::SharedPtr warthog_cmd_sub_;
         rclcpp::Publisher<airsim_interfaces::msg::WarthogState>::SharedPtr warthog_state_pub_;
         airsim_interfaces::msg::WarthogState warthog_state_msg_;
 
@@ -229,7 +229,7 @@ private:
 
     // commands
     void car_cmd_cb(const airsim_interfaces::msg::CarControls::SharedPtr msg, const std::string& vehicle_name);
-    void warthog_cmd_cb(const airsim_interfaces::msg::WarthogControls::SharedPtr msg, const std::string& vehicle_name);
+    void warthog_cmd_cb(const geometry_msgs::msg::Twist::SharedPtr msg, const std::string& vehicle_name);
     void update_commands();
 
     // state, returns the simulation timestamp best guess based on drone state timestamp, airsim needs to return timestap for environment
