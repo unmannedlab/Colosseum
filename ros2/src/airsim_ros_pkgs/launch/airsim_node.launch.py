@@ -17,7 +17,7 @@ def generate_launch_description():
 
     publish_clock = DeclareLaunchArgument(
         "publish_clock",
-        default_value='True')
+        default_value='False')
 
     is_vulkan = DeclareLaunchArgument(
         "is_vulkan",

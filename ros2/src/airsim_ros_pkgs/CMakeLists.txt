@@ -79,8 +79,31 @@ ament_target_dependencies(airsim_ros
   tf2_sensor_msgs
 )
 
+add_library(airsim_ros_warthog src/airsim_ros_wrapper_warthog.cpp)
+target_link_libraries(airsim_ros_warthog ${OpenCV_LIBS} yaml-cpp AirLib airsim_settings_parser)
+ament_target_dependencies(airsim_ros_warthog 
+  rclcpp
+  sensor_msgs
+  geometry_msgs
+  nav_msgs
+  image_transport
+  mavros_msgs
+  tf2_ros
+  cv_bridge
+  std_srvs
+  airsim_interfaces
+  tf2_geometry_msgs
+  tf2_sensor_msgs
+)
+
 add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros AirLib)
+ament_target_dependencies(airsim_node 
+  rclcpp
+)
+
+add_executable(airsim_node_warthog src/airsim_node_warthog.cpp)
+target_link_libraries(airsim_node_warthog airsim_ros_warthog AirLib)
 ament_target_dependencies(airsim_node 
   rclcpp
 )

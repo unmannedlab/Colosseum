@@ -1,4 +1,4 @@
-#include <airsim_ros_wrapper.h>
+#include <airsim_ros_wrapper_warthog.h>
 #include "common/AirSimSettings.hpp"
 #include <tf2_sensor_msgs/tf2_sensor_msgs.hpp>
 
