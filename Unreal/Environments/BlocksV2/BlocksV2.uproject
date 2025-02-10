@@ -8,16 +8,16 @@
 			"Name": "BlocksV2",
 			"Type": "Runtime",
 			"LoadingPhase": "Default",
-            "AdditionalDependencies": [
-                "AirSim"
-            ]
+			"AdditionalDependencies": [
+				"AirSim"
+			]
 		}
 	],
 	"Plugins": [
 		{
-            "Name": "AirSim",
-            "Enabled": true
-        },
+			"Name": "AirSim",
+			"Enabled": true
+		},
 		{
 			"Name": "ModelingToolsEditorMode",
 			"Enabled": true,

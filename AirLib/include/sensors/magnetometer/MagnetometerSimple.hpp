@@ -42,9 +42,9 @@ namespace airlib
             noise_vec_.reset();
 
             freq_limiter_.reset();
-            delay_line_.reset();
+          //  delay_line_.reset();
 
-            delay_line_.push_back(getOutputInternal());
+         //   delay_line_.push_back(getOutputInternal());
         }
 
         virtual void update() override
