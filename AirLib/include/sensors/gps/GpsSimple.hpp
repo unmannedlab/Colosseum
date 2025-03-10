@@ -39,7 +39,7 @@ namespace airlib
         virtual void resetImplementation() override
         {
             freq_limiter_.reset();
-            delay_line_.reset();
+           // delay_line_.reset();
 
             eph_filter.reset();
             epv_filter.reset();

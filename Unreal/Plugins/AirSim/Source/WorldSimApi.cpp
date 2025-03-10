@@ -864,11 +864,12 @@ msr::airlib::CameraInfo WorldSimApi::getCameraInfo(const CameraDetails& camera_d
 
 void WorldSimApi::setCameraPose(const msr::airlib::Pose& pose, const CameraDetails& camera_details)
 {
-    APIPCamera* camera = simmode_->getCamera(camera_details);
+    return;
+    /* APIPCamera* camera = simmode_->getCamera(camera_details);
     UAirBlueprintLib::RunCommandOnGameThread([camera, &pose]() {
         camera->setCameraPose(pose);
-    },
-                                             true);
+    },*/
+                                          //   true);
 }
 
 void WorldSimApi::setCameraFoV(float fov_degrees, const CameraDetails& camera_details)
