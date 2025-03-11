@@ -137,10 +137,47 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
     for (const auto& curr_vehicle_elem : AirSimSettings::singleton().vehicles) {
         auto& vehicle_setting = curr_vehicle_elem.second;
         auto curr_vehicle_name = curr_vehicle_elem.first;
+        const std::string topic_prefix = "~/" + curr_vehicle_name;
 
         nh_->set_parameter(rclcpp::Parameter("vehicle_name", curr_vehicle_name));
         std::cout<<"current vehicle name "<<vehicle_setting->vehicle_type<<std::endl;
         if(vehicle_setting->vehicle_type == "px4multirotor"){
+            for (auto& curr_camera_elem : vehicle_setting->cameras) {
+                auto& camera_setting = curr_camera_elem.second;
+                auto& curr_camera_name = curr_camera_elem.first;
+
+                set_nans_to_zeros_in_pose(*vehicle_setting, camera_setting);
+                //append_static_camera_tf(vehicle_ros.get(), curr_camera_name, camera_setting);
+                // camera_setting.gimbal
+                std::vector<ImageRequest> current_image_request_vec;
+                current_image_request_vec.clear();
+
+                // iterate over capture_setting std::map<int, CaptureSetting> capture_settings
+                for (const auto& curr_capture_elem : camera_setting.capture_settings) {
+                    auto& capture_setting = curr_capture_elem.second;
+
+                    // todo why does AirSimSettings::loadCaptureSettings calls AirSimSettings::initializeCaptureSettings()
+                    // which initializes default capture settings for _all_ NINE msr::airlib::ImageCaptureBase::ImageType
+                    if (!(std::isnan(capture_setting.fov_degrees))) {
+                        ImageType curr_image_type = msr::airlib::Utils::toEnum<ImageType>(capture_setting.image_type);
+                        // if scene / segmentation / surface normals / infrared, get uncompressed image with pixels_as_floats = false
+                        if (curr_image_type == ImageType::Scene || curr_image_type == ImageType::Segmentation || curr_image_type == ImageType::SurfaceNormals || curr_image_type == ImageType::Infrared) {
+                            current_image_request_vec.push_back(ImageRequest(curr_camera_name, curr_image_type, false, false));
+                        }
+                        // if {DepthPlanar, DepthPerspective,DepthVis, DisparityNormalized}, get float image
+                        else {
+                            current_image_request_vec.push_back(ImageRequest(curr_camera_name, curr_image_type, true));
+                        }
+
+                        const std::string camera_topic = topic_prefix + "/" + curr_camera_name + "/" + image_type_int_to_string_map_.at(capture_setting.image_type);
+                        image_pub_vec_.push_back(image_transporter.advertise(camera_topic, 1));
+                        cam_info_pub_vec_.push_back(nh_->create_publisher<sensor_msgs::msg::CameraInfo>(camera_topic + "/camera_info", 10));
+                        camera_info_msg_vec_.push_back(generate_cam_info(curr_camera_name, camera_setting, capture_setting));
+                    }
+                }
+                // push back pair (vector of image captures, current vehicle name)
+                airsim_img_request_vehicle_name_pair_vec_.push_back(std::make_pair(current_image_request_vec, curr_vehicle_name));
+            }
             continue;
         }
 
@@ -161,7 +198,7 @@ void AirsimROSWrapper::create_ros_pubs_from_settings_json()
 
         append_static_vehicle_tf(vehicle_ros.get(), *vehicle_setting);
 
-        const std::string topic_prefix = "~/" + curr_vehicle_name;
+        //const std::string topic_prefix = "~/" + curr_vehicle_name;
         vehicle_ros->odom_local_pub_ = nh_->create_publisher<nav_msgs::msg::Odometry>(topic_prefix + "/" + odom_frame_id_, 10);
 
         vehicle_ros->env_pub_ = nh_->create_publisher<airsim_interfaces::msg::Environment>(topic_prefix + "/environment", 10);
@@ -1315,6 +1352,7 @@ void AirsimROSWrapper::img_response_timer_cb()
         int image_response_idx = 0;
         for (const auto& airsim_img_request_vehicle_name_pair : airsim_img_request_vehicle_name_pair_vec_) {
             const std::vector<ImageResponse>& img_response = airsim_client_images_.simGetImages(airsim_img_request_vehicle_name_pair.first, airsim_img_request_vehicle_name_pair.second);
+            RCLCPP_ERROR(nh_->get_logger(), "getting image from %s\n", airsim_img_request_vehicle_name_pair.second.c_str());
 
             if (img_response.size() == airsim_img_request_vehicle_name_pair.first.size()) {
                 process_and_publish_img_response(img_response, image_response_idx, airsim_img_request_vehicle_name_pair.second);
