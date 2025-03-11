@@ -211,7 +211,6 @@ private:
     /// ROS timer callbacks
     void img_response_timer_cb(); // update images from airsim_client_ every nth sec
     void drone_state_timer_cb(); // update drone state from airsim_client_ every nth sec
-    void lidar_timer_cb();
 
     /// ROS subscriber callbacks
     void vel_cmd_world_frame_cb(const airsim_interfaces::msg::VelCmd::SharedPtr msg, const std::string& vehicle_name);
@@ -230,12 +229,10 @@ private:
     // commands
     void car_cmd_cb(const airsim_interfaces::msg::CarControls::SharedPtr msg, const std::string& vehicle_name);
     void warthog_cmd_cb(const geometry_msgs::msg::Twist::SharedPtr msg, const std::string& vehicle_name);
-    void update_commands();
 
     // state, returns the simulation timestamp best guess based on drone state timestamp, airsim needs to return timestap for environment
     rclcpp::Time update_state();
     void update_and_publish_static_transforms(VehicleROS* vehicle_ros);
-    void publish_vehicle_state();
 
     /// ROS service callbacks
     bool takeoff_srv_cb(const std::shared_ptr<airsim_interfaces::srv::Takeoff::Request> request, const std::shared_ptr<airsim_interfaces::srv::Takeoff::Response> response, const std::string& vehicle_name);
