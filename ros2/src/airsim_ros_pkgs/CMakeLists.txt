@@ -96,6 +96,23 @@ ament_target_dependencies(airsim_ros_warthog
   tf2_sensor_msgs
 )
 
+add_library(airsim_ros_px4_images src/airsim_ros_wrapper_px4_images.cpp)
+target_link_libraries(airsim_ros_px4_images ${OpenCV_LIBS} yaml-cpp AirLib airsim_settings_parser)
+ament_target_dependencies(airsim_ros_px4_images
+  rclcpp
+  sensor_msgs
+  geometry_msgs
+  nav_msgs
+  image_transport
+  mavros_msgs
+  tf2_ros
+  cv_bridge
+  std_srvs
+  airsim_interfaces
+  tf2_geometry_msgs
+  tf2_sensor_msgs
+)
+
 add_executable(airsim_node src/airsim_node.cpp)
 target_link_libraries(airsim_node airsim_ros AirLib)
 ament_target_dependencies(airsim_node 
@@ -105,6 +122,12 @@ ament_target_dependencies(airsim_node
 add_executable(airsim_node_warthog src/airsim_node_warthog.cpp)
 target_link_libraries(airsim_node_warthog airsim_ros_warthog AirLib)
 ament_target_dependencies(airsim_node_warthog 
+  rclcpp
+)
+
+add_executable(airsim_node_px4_images src/airsim_node_px4_images.cpp)
+target_link_libraries(airsim_node_px4_images airsim_ros_px4_images AirLib)
+ament_target_dependencies(airsim_node_px4_images
   rclcpp
 )
 
@@ -122,10 +145,10 @@ ament_target_dependencies(pd_position_controller_simple_node
 # rosidl_target_interfaces(pd_position_controller_simple_node
 #   ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
-install(TARGETS airsim_node airsim_node_warthog pd_position_controller_simple_node
+install(TARGETS airsim_node airsim_node_warthog airsim_node_px4_images pd_position_controller_simple_node
   DESTINATION lib/${PROJECT_NAME})
 
-install(TARGETS airsim_ros airsim_node_warthog pd_position_controller_simple
+install(TARGETS airsim_ros airsim_node_warthog pd_position_controller_simple airsim_ros_px4_images
   ARCHIVE
   DESTINATION lib
   LIBRARY
