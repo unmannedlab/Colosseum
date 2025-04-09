@@ -29,7 +29,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <airsim_interfaces/msg/car_state.hpp>
 #include <airsim_interfaces/msg/environment.hpp>
 #include <chrono>
-#include <cv_bridge/cv_bridge.hpp>
+#include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>

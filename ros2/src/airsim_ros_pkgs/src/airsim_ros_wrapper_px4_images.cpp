@@ -305,6 +305,7 @@ std::shared_ptr<sensor_msgs::msg::Image> AirsimROSWrapper::get_img_msg_from_resp
     img_msg_ptr->step = img_response.image_data_uint8.size() / img_response.height;
     img_msg_ptr->header.stamp = rclcpp::Time(img_response.time_stamp);
     img_msg_ptr->header.frame_id = frame_id;
+    //img_msg_ptr->header.frame_id = "warty/multisense_front_optical_frame";
     img_msg_ptr->height = img_response.height;
     img_msg_ptr->width = img_response.width;
     img_msg_ptr->encoding = "bgr8";
@@ -329,6 +330,7 @@ std::shared_ptr<sensor_msgs::msg::Image> AirsimROSWrapper::get_depth_img_msg_fro
     depth_img_msg->is_bigendian = 0;
     depth_img_msg->header.stamp = rclcpp::Time(img_response.time_stamp);
     depth_img_msg->header.frame_id = frame_id;
+    //depth_img_msg->header.frame_id = "warty/multisense_front_optical_frame";
     return depth_img_msg;
 }
 
@@ -340,6 +342,7 @@ sensor_msgs::msg::CameraInfo AirsimROSWrapper::generate_cam_info(const std::stri
     unused(camera_setting);
     sensor_msgs::msg::CameraInfo cam_info_msg;
     cam_info_msg.header.frame_id = camera_name + "_optical";
+    //cam_info_msg.header.frame_id = "warty/multisense_front_optical_frame";
     cam_info_msg.height = capture_setting.height;
     cam_info_msg.width = capture_setting.width;
     float f_x = (capture_setting.width / 2.0) / tan(math_common::deg2rad(capture_setting.fov_degrees / 2.0));

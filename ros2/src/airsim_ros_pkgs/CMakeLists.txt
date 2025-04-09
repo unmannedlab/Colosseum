@@ -131,6 +131,20 @@ ament_target_dependencies(airsim_node_px4_images
   rclcpp
 )
 
+add_executable(tf_publisher
+  src/tf_publisher.cpp)
+target_link_libraries(tf_publisher airsim_ros AirLib)
+ament_target_dependencies(tf_publisher 
+  rclcpp
+)
+
+add_executable(lidar_publisher
+  src/lidar_publisher.cpp)
+target_link_libraries(lidar_publisher airsim_ros AirLib)
+ament_target_dependencies(lidar_publisher 
+  rclcpp
+)
+
 add_executable(pd_position_controller_simple_node
   src/pd_position_controller_simple_node.cpp)
 target_link_libraries(pd_position_controller_simple_node
@@ -145,7 +159,7 @@ ament_target_dependencies(pd_position_controller_simple_node
 # rosidl_target_interfaces(pd_position_controller_simple_node
 #   ${PROJECT_NAME} "rosidl_typesupport_cpp")
 
-install(TARGETS airsim_node airsim_node_warthog airsim_node_px4_images pd_position_controller_simple_node
+install(TARGETS airsim_node airsim_node_warthog airsim_node_px4_images pd_position_controller_simple_node tf_publisher lidar_publisher
   DESTINATION lib/${PROJECT_NAME})
 
 install(TARGETS airsim_ros airsim_node_warthog pd_position_controller_simple airsim_ros_px4_images

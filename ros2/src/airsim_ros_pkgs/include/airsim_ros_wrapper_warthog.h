@@ -32,7 +32,7 @@ STRICT_MODE_OFF //todo what does this do?
 #include <airsim_interfaces/msg/warthog_state.hpp>
 #include <airsim_interfaces/msg/environment.hpp>
 #include <chrono>
-#include <cv_bridge/cv_bridge.hpp>
+#include <cv_bridge/cv_bridge.h>
 #include <geometry_msgs/msg/pose_stamped.hpp>
 #include <geometry_msgs/msg/transform_stamped.hpp>
 #include <geometry_msgs/msg/twist.hpp>
@@ -351,7 +351,7 @@ private:
     /// ROS tf
     const std::string AIRSIM_FRAME_ID = "world_ned";
     std::string world_frame_id_ = AIRSIM_FRAME_ID;
-    const std::string AIRSIM_ODOM_FRAME_ID = "odom_local_ned";
+    const std::string AIRSIM_ODOM_FRAME_ID = "base_link";
     const std::string ENU_ODOM_FRAME_ID = "odom_local_enu";
     std::string odom_frame_id_ = AIRSIM_ODOM_FRAME_ID;
     std::shared_ptr<tf2_ros::TransformBroadcaster> tf_broadcaster_;
