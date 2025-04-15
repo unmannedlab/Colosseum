@@ -50,7 +50,7 @@ else #linux
         software-properties-common \
         wget \
         libvulkan1 \
-        vulkan-utils
+        #vulkan-utils
 
     #install clang and build tools
     VERSION=$(lsb_release -rs | cut -d. -f1)
