@@ -34,7 +34,8 @@ public:
             create_transform("warty/base_link", "warty/gps_link", 0.0, 0.0, 0.0, 0, 0, 0, 1),
             create_transform("warty/base_link", "warty/multisense_front_optical_frame", 0.549998, -2.38772e-06, 0.849999, -0.560985, 0.560985, -0.430459, 0.430459),
             create_transform("warty/base_link", "warty/imu_link", 0.0, 0.0, 0.0, 0, 0, 0, 1),
-            create_transform("warty/base_link", "warty/lidar_link", -5.406e-06, -3.238e-06, 1.099999, 0, 0, 0, 1),
+//            create_transform("warty/base_link", "warty/lidar_link", -5.406e-06, -3.238e-06, 1.099999, 0, 0, 0, 1),
+            create_transform("warty/base_link", "warty/lidar", -5.406e-06, -3.238e-06, 1.099999, 0, 0, 0, 1),
             create_transform("warty/base_link", "warty/multisense_back_optical_frame", -0.550011, 4.54526e-07, 0.849998, 0.560985, 0.560985, -0.430459, -0.430459),
 
             create_transform("warty2/base_link", "warty2/gps_link", 0.0, 0.0, 0.0, 0, 0, 0, 1),

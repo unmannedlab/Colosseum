@@ -19,7 +19,7 @@ def build_remapping_list(veh_name, num_vehicles):
             (f'/airsim_node_warthog/{vehicle}/imu/imu', f'/{vehicle}/imu/data'),
             (f'/airsim_node_warthog/{vehicle}/base_link', f'/{vehicle}/platform/odom'),
            
-            (f'/airsim_node_warthog/{vehicle}/lidar/lidar_link', f'/{vehicle}/lidar_points'),
+            (f'/airsim_node_warthog/{vehicle}/lidar/lidar', f'/{vehicle}/lidar_points'),
             (f'/airsim_node_warthog/{vehicle}/camera_2/Scene', f'/{vehicle}/multisense_front/color/image_raw'),
             (f'/airsim_node_warthog/{vehicle}/camera_1/DepthPlanar/camera_info', f'/{vehicle}/multisense_front/depth/camera_info'),
             (f'/airsim_node_warthog/{vehicle}/camera_1/DepthPlanar', f'/{vehicle}/multisense_front/depth/image_rect_raw'),
