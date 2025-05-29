@@ -707,6 +707,81 @@ sensor_msgs::msg::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const 
     sensor_msgs::msg::PointCloud2 lidar_msg;
     lidar_msg.header.stamp = rclcpp::Time(lidar_data.time_stamp);
     lidar_msg.header.frame_id = vehicle_name + "/" + sensor_name;
+
+    if (lidar_data.point_cloud.size() > 3) {
+        lidar_msg.height = 1;
+        lidar_msg.width = lidar_data.point_cloud.size() / 3;
+
+        lidar_msg.fields.resize(3);
+        lidar_msg.fields[0].name = "x";
+        lidar_msg.fields[1].name = "y";
+        lidar_msg.fields[2].name = "z";
+
+        int offset = 0;
+
+        for (size_t d = 0; d < lidar_msg.fields.size(); ++d, offset += 4) {
+            lidar_msg.fields[d].offset = offset;
+            lidar_msg.fields[d].datatype = sensor_msgs::msg::PointField::FLOAT32;
+            lidar_msg.fields[d].count = 1;
+        }
+
+        lidar_msg.is_bigendian = false;
+        lidar_msg.point_step = offset; // 4 * num fields
+        lidar_msg.row_step = lidar_msg.point_step * lidar_msg.width;
+
+        lidar_msg.is_dense = true; // todo
+        std::vector<float> data_std = lidar_data.point_cloud;
+
+        const unsigned char* bytes = reinterpret_cast<const unsigned char*>(data_std.data());
+        std::vector<unsigned char> lidar_msg_data(bytes, bytes + sizeof(float) * data_std.size());
+        lidar_msg.data = std::move(lidar_msg_data);
+        geometry_msgs::msg::TransformStamped tf_msg;
+        tf_msg.header = lidar_msg.header;               // same stamp & parent frame
+        tf_msg.child_frame_id = lidar_msg.header.frame_id; // satisfies API; will reset later
+        tf_msg.transform.translation.x = 0.0;
+        tf_msg.transform.translation.y = 0.0;
+        tf_msg.transform.translation.z = 0.0;
+
+        tf2::Quaternion q;
+        q.setRPY(M_PI, 0.0, 0.0);                 // roll = π rad
+        tf_msg.transform.rotation.x = q.x();
+        tf_msg.transform.rotation.y = q.y();
+        tf_msg.transform.rotation.z = q.z();
+        tf_msg.transform.rotation.w = q.w();
+        sensor_msgs::msg::PointCloud2 out;
+        tf2::doTransform(lidar_msg, out, tf_msg);
+        out.header = lidar_msg.header;
+        lidar_msg = std::move(out);
+
+        if (isENU_) {
+        //if (1) {
+            try {
+                sensor_msgs::msg::PointCloud2 lidar_msg_enu;
+                auto transformStampedENU = tf_buffer_->lookupTransform(AIRSIM_FRAME_ID, vehicle_name + "/base_link", rclcpp::Time(0), rclcpp::Duration::from_nanoseconds(1));
+                tf2::doTransform(lidar_msg, lidar_msg_enu, transformStampedENU);
+
+                lidar_msg_enu.header.stamp = lidar_msg.header.stamp;
+                lidar_msg_enu.header.frame_id = lidar_msg.header.frame_id;
+
+                lidar_msg = std::move(lidar_msg_enu);
+            }
+            catch (tf2::TransformException& ex) {
+                RCLCPP_WARN(nh_->get_logger(), "%s", ex.what());
+                rclcpp::Rate(1.0).sleep();
+            }
+        }
+    }
+    else {
+        // msg = []
+    }
+
+    return lidar_msg;
+}
+/*sensor_msgs::msg::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const msr::airlib::LidarData& lidar_data, const std::string& vehicle_name, const std::string& sensor_name) const
+{
+    sensor_msgs::msg::PointCloud2 lidar_msg;
+    lidar_msg.header.stamp = rclcpp::Time(lidar_data.time_stamp);
+    lidar_msg.header.frame_id = vehicle_name + "/" + sensor_name;
     std::vector<float> data_std = lidar_data.point_cloud;
 
 	if (data_std.size() > 4 && data_std.size() % 4 == 0) {
@@ -780,7 +855,7 @@ sensor_msgs::msg::PointCloud2 AirsimROSWrapper::get_lidar_msg_from_airsim(const 
     }
 
     return lidar_msg;
-}
+}*/
 
 airsim_interfaces::msg::Environment AirsimROSWrapper::get_environment_msg_from_airsim(const msr::airlib::Environment::State& env_data) const
 {
