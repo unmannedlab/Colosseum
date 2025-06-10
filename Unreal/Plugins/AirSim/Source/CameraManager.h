@@ -7,6 +7,10 @@
 #include "ManualPoseController.h"
 #include "common/common_utils/Utils.hpp"
 #include "GameFramework/SpringArmComponent.h"
+
+#include "Vehicles/Multirotor/FlyingPawn.h"
+#include "Vehicles/Warthog/WarthogPawn.h"
+
 #include "CameraManager.generated.h"
 
 UENUM(BlueprintType)
@@ -71,6 +75,12 @@ private:
     void disableCameras(bool fpv, bool backup, bool external, bool front);
     void notifyViewModeChanged();
 
+    void SearchForPawns();
+    void SwitchToNextPawn();
+    void SwitchToPreviousPawn();
+    //void UpdateCameraReference();
+    void ReattachSpringArm();
+
 private:
     typedef common_utils::Utils Utils;
 
@@ -84,6 +94,10 @@ private:
     ECameraDirectorMode mode_;
     UPROPERTY()
     UManualPoseController *manual_pose_controller_;
+
+    // Array of all vehicle pawns
+    UPROPERTY()
+    TArray<AActor*> Pawns;
 
     FVector camera_start_location_;
     FVector initial_ground_obs_offset_;

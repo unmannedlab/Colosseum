@@ -22,6 +22,9 @@ ACameraManager::ACameraManager()
 void ACameraManager::BeginPlay()
 {
     Super::BeginPlay();
+
+    // Search for pawns on delay to ensure they've been spawned
+    GetWorld()->GetTimerManager().SetTimerForNextTick(this, &ACameraManager::SearchForPawns);
 }
 
 void ACameraManager::Tick(float DeltaTime)
@@ -195,6 +198,10 @@ void ACameraManager::setupInputBindings()
     UAirBlueprintLib::BindActionToKey("inputEventBackupView", EKeys::K, this, &ACameraManager::inputEventBackupView);
     UAirBlueprintLib::BindActionToKey("inputEventNoDisplayView", EKeys::Hyphen, this, &ACameraManager::inputEventNoDisplayView);
     UAirBlueprintLib::BindActionToKey("inputEventFrontView", EKeys::I, this, &ACameraManager::inputEventFrontView);
+
+    // Added camera controls
+    UAirBlueprintLib::BindActionToKey("SwitchToNextPawn", EKeys::Period, this, &ACameraManager::SwitchToNextPawn);
+    UAirBlueprintLib::BindActionToKey("SwitchToPreviousPawn", EKeys::Comma, this, &ACameraManager::SwitchToPreviousPawn);
 }
 
 void ACameraManager::EndPlay(const EEndPlayReason::Type EndPlayReason)
@@ -347,4 +354,179 @@ void ACameraManager::notifyViewModeChanged()
     UWorld* world = GetWorld();
     UGameViewportClient* gameViewport = world->GetGameViewport();
     gameViewport->bDisableWorldRendering = nodisplay;
+}
+
+void ACameraManager::SearchForPawns()
+{
+    //UE_LOG(LogTemp, Warning, TEXT("SearchForPawns Called."));  // DEBUG
+
+    // Find vehicle pawns
+    TArray<AActor*> FoundActors;
+    UGameplayStatics::GetAllActorsOfClass(GetWorld(), APawn::StaticClass(), FoundActors);
+
+    for (AActor* Actor : FoundActors)
+    {
+        APawn* pawn = Cast<APawn>(Actor);
+        if (!pawn) continue;
+
+        if (Actor->IsA(AFlyingPawn::StaticClass()) || Actor->IsA(AWarthogPawn::StaticClass()))
+        {
+            Pawns.Add(pawn);
+            //UE_LOG(LogTemp, Log, TEXT("Found vehicle: %s"), *pawn->GetName());  // DEBUG
+        }
+    }
+}
+
+void ACameraManager::SwitchToNextPawn()
+{
+    //UE_LOG(LogTemp, Warning, TEXT("SwitchToNextPawn called."));  // DEBUG
+
+    if (Pawns.Num() == 0) return;
+
+    if (Pawns.Num() == 1)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Viewing only vehicle."));
+        return;
+    }
+
+    // Store current mode before switching pawns
+    const ECameraDirectorMode CurrentMode = mode_;
+
+    // Get current index
+    int32 CurrentIndex = Pawns.IndexOfByKey(follow_actor_);
+    int32 NewIndex = (CurrentIndex + 1) % Pawns.Num();
+
+    // Set new follow actor
+    follow_actor_ = Pawns[NewIndex];
+
+    // Update camera references for the new pawn
+    //UpdateCameraReference();
+
+    // Special handing for spring arm mode
+    if (CurrentMode == ECameraDirectorMode::CAMERA_DIRECTOR_MODE_SPRINGARM_CHASE)
+    {
+        ReattachSpringArm();
+    }
+
+    // Reset camera logic to maintain view mode after switching pawns
+    switch (CurrentMode)
+    {
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FLY_WITH_ME:
+        inputEventFlyWithView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FPV:
+        inputEventFpvView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_GROUND_OBSERVER:
+        inputEventGroundView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_SPRINGARM_CHASE:
+        inputEventSpringArmChaseView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_BACKUP:
+        inputEventBackupView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_MANUAL:
+        inputEventManualView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FRONT:
+        inputEventFrontView();
+        break;
+    default:
+        break;
+    }
+}
+
+void ACameraManager::SwitchToPreviousPawn()
+{
+    //UE_LOG(LogTemp, Warning, TEXT("SwitchToPreviousPawn called.")); // DEBUG
+
+    if (Pawns.Num() == 0) return;
+
+    if (Pawns.Num() == 1)
+    {
+        GEngine->AddOnScreenDebugMessage(-1, 2.f, FColor::Green, TEXT("Viewing only vehicle."));
+        return;
+    }
+
+    // Store current mode before switching pawns
+    const ECameraDirectorMode CurrentMode = mode_;
+
+    // Get current index
+    int32 CurrentIndex = Pawns.IndexOfByKey(follow_actor_);
+    int32 NewIndex = (CurrentIndex - 1 + Pawns.Num()) % Pawns.Num();
+
+    // Set new follow actor
+    follow_actor_ = Pawns[NewIndex];
+
+    // Update camera references for the new pawn
+    //UpdateCameraReference();
+
+    // Special handing for spring arm mode
+    if (CurrentMode == ECameraDirectorMode::CAMERA_DIRECTOR_MODE_SPRINGARM_CHASE)
+    {
+        ReattachSpringArm();
+    }
+
+    // Reset camera logic to maintain view mode after switching pawns
+    switch (CurrentMode)
+    {
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FLY_WITH_ME:
+        inputEventFlyWithView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FPV:
+        inputEventFpvView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_GROUND_OBSERVER:
+        inputEventGroundView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_SPRINGARM_CHASE:
+        inputEventSpringArmChaseView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_BACKUP:
+        inputEventBackupView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_MANUAL:
+        inputEventManualView();
+        break;
+    case ECameraDirectorMode::CAMERA_DIRECTOR_MODE_FRONT:
+        inputEventFrontView();
+        break;
+    default:
+        break;
+    }
+}
+
+//void ACameraManager::UpdateCameraReference()
+//{
+//    if (!follow_actor_) return;
+//
+//    TArray<UActorComponent*> CameraComponents;
+//    follow_actor_->GetComponents(APIPCamera::StaticClass(), CameraComponents);
+//
+//    Some logic to update the fpv_camera_, backup_camera_, and front_camera_
+//}
+
+void ACameraManager::ReattachSpringArm()
+{
+    if (!follow_actor_ || !SpringArm) return;
+
+    FVector DesiredRelativeLocation = FVector(0.0f, 0.0f, 34.0f);
+    FRotator DesiredRelativeRotation = FRotator(-20.0f, 0.0f, 0.0f);
+
+    // Detach spring arm from current actor
+    SpringArm->DetachFromComponent(FDetachmentTransformRules::KeepWorldTransform);
+
+    // Attach spring arm to new actor
+    SpringArm->AttachToComponent(follow_actor_->GetRootComponent(),
+        FAttachmentTransformRules::KeepRelativeTransform);
+
+    SpringArm->SetRelativeLocation(DesiredRelativeLocation);
+    SpringArm->SetRelativeRotation(DesiredRelativeRotation);
+
+    if (ExternalCamera)
+    {
+        ExternalCamera->SetActorRelativeLocation(FVector(follow_distance_ * 100.f, 0.0f, 0.0f));
+        ExternalCamera->SetActorRelativeRotation(FRotator(10.0f, 0.0f, 0.0f));
+    }
 }
