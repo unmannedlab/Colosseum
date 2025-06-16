@@ -227,6 +227,11 @@ void AWarthogPawn::DoPidUpdate(float dt)
     curr_w = curr_r_error;
     float v_err = v - desired_linear_vel_;
     float w_err = omega - desired_angular_vel_;
+    if (v_err < 0.01 && w_err < 0.01) {
+        right_torque_ = 0;
+        left_torque_ = 0;
+        return;
+    }
     right_torque_ = -(kp_ * v_err + kd_ * w_err)/2;
     left_torque_ = -(kp_ * v_err - kd_ * w_err)/2;
     return;
